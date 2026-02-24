@@ -846,23 +846,23 @@
 
  		   {/* ACTIONS */}
 		<div style={{
-		  background: "linear-gradient(135deg, rgba(28,10,10,0.95), rgba(59,15,15,0.92), rgba(120,30,20,0.85))",
 		  borderRadius: 16, padding: 0, marginBottom: 24, position: "relative", overflow: "hidden", display: "flex", alignItems: "stretch", minHeight: 240,
 		}}>
-		  <div style={{ width: 340, alignSelf: "stretch", flexShrink: 0, position: "relative" }}>
-		    {/* Image avec opacité */}
-		    <div style={{
-		      position: "absolute", inset: 0,
-		      backgroundImage: IMG_ACTIONS,
-		      backgroundSize: "cover", backgroundPosition: "center top",
-		      opacity: 0.5,
-		    }} />
-		    {/* Dégradé de fondu vers la droite — large pour raccord propre */}
-		    <div style={{
-		      position: "absolute", top: 0, bottom: 0, right: -2, width: 220,
-		      background: "linear-gradient(to right, transparent 0%, rgba(59,15,15,0.7) 50%, rgba(59,15,15,1) 100%)",
-		    }} />
-		  </div>
+		  {/* Image de fond sur tout l'encart */}
+		  <div style={{
+		    position: "absolute", inset: 0,
+		    backgroundImage: IMG_ACTIONS,
+		    backgroundSize: "cover", backgroundPosition: "center top",
+		    opacity: 0.45,
+		  }} />
+		  {/* Overlay dégradé unique : transparent à gauche → sombre à droite */}
+		  <div style={{
+		    position: "absolute", inset: 0,
+		    background: "linear-gradient(to right, rgba(28,10,10,0.2) 0%, rgba(28,10,10,0.75) 25%, rgba(38,12,12,0.95) 40%, rgba(50,14,14,1) 55%, rgba(50,14,14,1) 100%)",
+		  }} />
+
+		  {/* Espace réservé à l'image (invisible, juste pour le layout) */}
+		  <div style={{ width: 300, flexShrink: 0 }} />
 
               <div style={{ flex: 1, padding: "20px 24px", position: "relative", zIndex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
