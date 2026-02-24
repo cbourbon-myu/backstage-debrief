@@ -472,13 +472,13 @@
                       ) : null}
                       {cat.label}
                     </div>
-                      <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12 }}>
                         {[1,2,3,4,5].map(score => (
                           <button key={score} onClick={() => submitRating(cat.id, score)} style={{
-                            width: 38, height: 38, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E5E7EB",
+                            width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E5E7EB",
                             background: myScore === score ? cat.bg : "#F9FAFB",
-                            fontSize: 18, cursor: "pointer", transition: "all 0.2s",
-                            transform: myScore === score ? "scale(1.2)" : "scale(1)",
+                            fontSize: 26, cursor: "pointer", transition: "all 0.2s",
+                            transform: myScore === score ? "scale(1.15)" : "scale(1)",
                             boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
                           }} title={RATING_LABELS[score].label}>{RATING_LABELS[score].emoji}</button>
                         ))}
@@ -603,15 +603,15 @@
                 const avg = getAvg(cat.id);
                 const voters = getRatingsForCategory(cat.id);
                 return (
-                  <div style={{ background: "#fff", borderRadius: 14, border: "2px solid " + cat.border, padding: "16px 14px", textAlign: "center", maxWidth: 400 }}>
+                  <div style={{ background: "#fff", borderRadius: 14, border: "2px solid " + cat.border, padding: "20px 20px", textAlign: "center", maxWidth: 400 }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, marginBottom: 12 }}>{cat.label}</div>
-                    <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 10 }}>
+                    <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12 }}>
                       {[1,2,3,4,5].map(score => (
                         <button key={score} onClick={() => submitRating(cat.id, score)} style={{
-                          width: 38, height: 38, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E5E7EB",
+                          width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E5E7EB",
                           background: myScore === score ? cat.bg : "#F9FAFB",
-                          fontSize: 18, cursor: "pointer", transition: "all 0.2s",
-                          transform: myScore === score ? "scale(1.2)" : "scale(1)",
+                          fontSize: 26, cursor: "pointer", transition: "all 0.2s",
+                          transform: myScore === score ? "scale(1.15)" : "scale(1)",
                           boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
                         }} title={RATING_LABELS[score].label}>{RATING_LABELS[score].emoji}</button>
                       ))}
