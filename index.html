@@ -793,7 +793,7 @@
                       <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png" style={{ width: 70, height: 70, objectFit: "contain", display: "block" }} />
                       <span>ROTI</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12, marginTop: 12 }}>
                       {[1,2,3,4,5].map(score => (
                         <button key={score} onClick={() => submitRating(cat.id, score)} style={{
                           width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E5E7EB",
