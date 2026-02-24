@@ -176,8 +176,37 @@
 
       const fb = useFirebase("retro-2026-02-24/feedbacks", [], isAuthed);
       const act = useFirebase("retro-2026-02-24/actions", [], isAuthed);
+      const rat = useFirebase("retro-2026-02-24/ratings", [], isAuthed);
       const feedbacks = fb.data;
       const actions = act.data;
+      const ratingsRaw = rat.data;
+
+      const RATING_CATEGORIES = [
+        { id: "ambiance", label: "🎵 Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
+        { id: "satisfaction", label: "💼 Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
+        { id: "roti", label: "🎸 ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" },
+      ];
+      const RATING_LABELS = {
+        1: { emoji: "💀", label: "Silence de mort" },
+        2: { emoji: "🎵", label: "Fausse note" },
+        3: { emoji: "🎸", label: "En rodage" },
+        4: { emoji: "🤘", label: "Ça groove !" },
+        5: { emoji: "⭐", label: "Épique !" },
+      };
+
+      const getRatingsForCategory = (catId) => Array.isArray(ratingsRaw) ? ratingsRaw.filter(r => r.category === catId) : [];
+      const getMyRating = (catId) => Array.isArray(ratingsRaw) ? ratingsRaw.find(r => r.category === catId && r.authorUid === user?.uid) : null;
+      const hasVotedAll = RATING_CATEGORIES.every(c => getMyRating(c.id));
+      const submitRating = (catId, score) => {
+        const existing = getMyRating(catId);
+        if (existing) { rat.updateItem(existing.id, { score }); }
+        else { rat.pushItem({ id: Date.now(), category: catId, score, author: userName, authorUid: user.uid }); }
+      };
+      const getAvg = (catId) => {
+        const items = getRatingsForCategory(catId);
+        if (!items.length) return null;
+        return (items.reduce((s, r) => s + r.score, 0) / items.length).toFixed(1);
+      };
 
       const [selectedCat, setSelectedCat] = useState("rock");
       const [feedbackText, setFeedbackText] = useState("");
@@ -252,7 +281,7 @@
             }} />
 
           <div style={{ position: "relative", zIndex: 1 }}>
-  			<div style={{ fontSize: 24, fontWeight: 800, color: "#FDE047", letterSpacing: 2.5, display: "flex", alignItems: "center" }}>
+  			<div style={{ fontSize: 24, fontWeight: 800, color: "#F97316", letterSpacing: 2.5, display: "flex", alignItems: "center" }}>
   			  <img src="Batterie.png" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", marginRight: 10 }} />
   			  BACKSTAGE DEBRIEF
  			 </div>
@@ -393,6 +422,66 @@
                   onBlur={e => e.target.style.borderColor = "#D1D5DB"}
                 />
                 <button onClick={addFeedback} style={{ width: 42, height: 42, borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", fontSize: 22, fontWeight: 700, cursor: "pointer" }}>+</button>
+              </div>
+            </div>
+
+ 		   {/* VOTES */}
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14 }}>🎚️ Le ressenti du Sprint</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+                {RATING_CATEGORIES.map(cat => {
+                  const myRating = getMyRating(cat.id);
+                  const myScore = myRating?.score;
+                  const avg = getAvg(cat.id);
+                  const voters = getRatingsForCategory(cat.id);
+                  return (
+                    <div key={cat.id} style={{ background: "#fff", borderRadius: 14, border: "2px solid " + cat.border, padding: "16px 14px", textAlign: "center" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, marginBottom: 12 }}>{cat.label}</div>
+                      {/* Boutons de vote */}
+                      <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 10 }}>
+                        {[1,2,3,4,5].map(score => (
+                          <button key={score} onClick={() => submitRating(cat.id, score)} style={{
+                            width: 38, height: 38, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E5E7EB",
+                            background: myScore === score ? cat.bg : "#F9FAFB",
+                            fontSize: 18, cursor: "pointer", transition: "all 0.2s",
+                            transform: myScore === score ? "scale(1.2)" : "scale(1)",
+                            boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
+                          }}
+                            title={RATING_LABELS[score].label}
+                          >{RATING_LABELS[score].emoji}</button>
+                        ))}
+                      </div>
+                      {/* Label de ma note */}
+                      {myScore && (
+                        <div style={{ fontSize: 11.5, color: cat.color, fontWeight: 600, marginBottom: 8 }}>
+                          Tu as voté : {RATING_LABELS[myScore].emoji} {RATING_LABELS[myScore].label}
+                        </div>
+                      )}
+                      {/* Résultats — visibles seulement si tout le monde a voté */}
+                      {hasVotedAll ? (
+                        <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 10, marginTop: 4 }}>
+                          <div style={{ fontSize: 22, fontWeight: 800, color: cat.color }}>{avg} <span style={{ fontSize: 13, fontWeight: 500, color: "#6B7280" }}>/ 5</span></div>
+                          <div style={{ fontSize: 10.5, color: "#9CA3AF", marginTop: 2 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
+                          <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
+                            {voters.map(v => (
+                              <span key={v.id} style={{ fontSize: 10, background: cat.bg, color: cat.color, borderRadius: 8, padding: "2px 7px", fontWeight: 500 }}>
+                                {v.author} {RATING_LABELS[v.score]?.emoji}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : myScore ? (
+                        <div style={{ fontSize: 11, color: "#9CA3AF", fontStyle: "italic", borderTop: "1px solid " + cat.border + "44", paddingTop: 8, marginTop: 4 }}>
+                          🔒 Résultats visibles quand tout le monde a voté sur les 3 thèmes
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 11, color: "#9CA3AF", fontStyle: "italic" }}>
+                          Choisis ton emoji pour voter 👆
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
