@@ -364,7 +364,22 @@
 
             {/* RESSENTI DU SPRINT */}
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14 }}>🎚️ Le ressenti du Sprint</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#FFD700"/>
+                      <stop offset="50%" stopColor="#FFA500"/>
+                      <stop offset="100%" stopColor="#B8860B"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="9" y="2" width="6" height="11" rx="3" fill="url(#goldGrad)" stroke="#B8860B" strokeWidth="0.5"/>
+                  <path d="M5 11a7 7 0 0 0 14 0" stroke="url(#goldGrad)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                  <line x1="12" y1="18" x2="12" y2="21" stroke="url(#goldGrad)" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="9" y1="21" x2="15" y2="21" stroke="url(#goldGrad)" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                Le ressenti du Sprint
+              </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 {[
                   { id: "ambiance", label: "🎵 Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
