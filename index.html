@@ -182,8 +182,8 @@
       const ratingsRaw = rat.data;
 
       const RATING_CATEGORIES = [
-        { id: "ambiance", label: "🎵 Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
-        { id: "satisfaction", label: "💼 Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
+        { id: "ambiance", label: "Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
+        { id: "satisfaction", label: "Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
         { id: "roti", label: "🎸 ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" },
       ];
       const RATING_LABELS = {
@@ -244,14 +244,24 @@
         act.pushItem({ id: Date.now(), description: actionDesc.trim(), responsable: actionResp.trim(), done: false });
         setActionDesc(""); setActionResp("");
       };
-      const exportJSON = () => {
-        const data = { date: new Date().toISOString(), feedbacks, actions };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a"); a.href = url;
-        a.download = "retrospective-2026-02-24.json"; a.click();
-        URL.revokeObjectURL(url);
-      };
+const exportMarkdown = () => {
+  const lines = [
+    `# 🥁 Backstage Debrief — Sprint du 24/02/2026\n`,
+    `## 🎸 Ce qui a rocké`,
+    ...feedbacks.filter(f => f.category === "rock").map(f => `- ${f.text} *(${f.author})*`),
+    `\n## 🔇 Les fausses notes`,
+    ...feedbacks.filter(f => f.category === "fausse").map(f => `- ${f.text} *(${f.author})*`),
+    `\n## 💫 À améliorer`,
+    ...feedbacks.filter(f => f.category === "ameliorer").map(f => `- ${f.text} *(${f.author})*`),
+    `\n## 🎯 Actions pour le prochain sprint`,
+    ...actions.map(a => `- [${a.done ? "x" : " "}] ${a.description} — 👤 ${a.responsable}`),
+  ];
+  const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url;
+  a.download = "retrospective-2026-02-24.md"; a.click();
+  URL.revokeObjectURL(url);
+};
       const resetAll = async () => {
         if (!confirm("⚠️ Remettre à zéro tous les feedbacks et actions ?")) return;
         await fb.setItems([]); await act.setItems([]);
@@ -318,7 +328,7 @@
             </div>
           </div>
 
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 20px 40px" }}>
+          <div style={{ maxWidth: 1400, margin: "0 auto", padding: "24px 20px 40px" }}>
 
             {/* LIVE BANNER */}
             <div style={{
