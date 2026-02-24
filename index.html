@@ -403,12 +403,71 @@
         act.pushItem({ id: Date.now(), description: actionDesc.trim(), responsable: actionResp.trim(), done: false, authorUid: user.uid });
         setActionDesc(""); setActionResp("");
       };
-      const exportJSON = () => {
-        const data = { date: new Date().toISOString(), feedbacks, actions };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const exportMarkdown = () => {
+        const dateLabel = sprintDateKey || new Date().toISOString().split("T")[0];
+        const rock = feedbacks.filter(f => f.category === "rock");
+        const fausse = feedbacks.filter(f => f.category === "fausse");
+        const ameliorer = feedbacks.filter(f => f.category === "ameliorer");
+        const ambianceVotes = Array.isArray(ratingsRaw) ? ratingsRaw.filter(r => r.category === "ambiance") : [];
+        const satisfactionVotes = Array.isArray(ratingsRaw) ? ratingsRaw.filter(r => r.category === "satisfaction") : [];
+        const rotiVotes = Array.isArray(ratingsRaw) ? ratingsRaw.filter(r => r.category === "roti") : [];
+        const avg = (items) => items.length ? (items.reduce((s, r) => s + r.score, 0) / items.length).toFixed(1) : "—";
+        const LABELS = { 1: "💀 Silence de mort", 2: "🎵 Petite étincelle", 3: "🎸 En rodage", 4: "🤘 Ça groove !", 5: "⭐ Épique !" };
+
+        const lines = [];
+        lines.push(`# 🎸 Rétro Sprint — ${dateLabel}`);
+        lines.push(`> Exporté le ${new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}`);
+        lines.push("");
+
+        lines.push("## 🎚️ Ressenti du Sprint");
+        lines.push("");
+        lines.push("| Thème | Moyenne | Votes |");
+        lines.push("|---|---|---|");
+        lines.push(`| 🤘 Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push(`| 💼 Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push("");
+
+        lines.push("## 🎸 Ce qui a rocké");
+        lines.push("");
+        if (rock.length) rock.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+        else lines.push("*Aucun retour*");
+        lines.push("");
+
+        lines.push("## 🔇 Les fausses notes");
+        lines.push("");
+        if (fausse.length) fausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+        else lines.push("*Aucun retour*");
+        lines.push("");
+
+        lines.push("## 💫 À améliorer");
+        lines.push("");
+        if (ameliorer.length) ameliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+        else lines.push("*Aucun retour*");
+        lines.push("");
+
+        if (actions.length) {
+          lines.push("## 🎯 Actions décidées");
+          lines.push("");
+          lines.push("| Action | Responsable | Statut |");
+          lines.push("|---|---|---|");
+          actions.forEach(a => lines.push(`| ${a.description} | ${a.responsable || "—"} | ${a.done ? "✅ Fait" : "⏳ À faire"} |`));
+          lines.push("");
+        }
+
+        lines.push("## 🎼 ROTI");
+        lines.push("");
+        lines.push(`**Moyenne : ${avg(rotiVotes)} / 5**`);
+        if (rotiVotes.length) {
+          lines.push("");
+          rotiVotes.forEach(v => lines.push(`- ${v.author} : ${LABELS[v.score] || v.score}`));
+        }
+        lines.push("");
+
+        const md = lines.join("\n");
+        const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a"); a.href = url;
-        a.download = `retrospective-${sprintDateKey}.json`; a.click();
+        a.download = `retro-${sprintDateKey}.md`; a.click();
         URL.revokeObjectURL(url);
       };
       const resetAll = async () => {
@@ -466,7 +525,7 @@
                   animation: overallStatus === "saving" || overallStatus === "connecting" ? "pulse 1s infinite" : "none" }} />
                 <span style={{ fontSize: 11, color: "#fff", opacity: 0.85 }}>{syncLabels[overallStatus]}</span>
               </div>
-              <button onClick={exportJSON} className="no-print" style={{
+              <button onClick={exportMarkdown} className="no-print" style={{
                 background: "rgba(255,255,255,0.15)", border: "1.2px solid rgba(255,255,255,0.55)",
                 borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer",
               }}>⬇ Exporter</button>
