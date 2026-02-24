@@ -563,13 +563,19 @@
                           }}>🎭</div>
                         )}
                         {showSprintResults && (
-                          <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 10, animation: "resultReveal 0.6s ease forwards" }}>
-                            <div style={{ fontSize: 26, fontWeight: 800, color: cat.color }}>{avg} <span style={{ fontSize: 13, fontWeight: 500, color: "#6B7280" }}>/ 5</span></div>
-                            <div style={{ fontSize: 10.5, color: "#9CA3AF", marginTop: 2 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
-                            <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
+                          <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
+                            <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
+                            <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
+                            <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 10 }}>/ 5 — {RATING_LABELS[Math.round(avg)]?.label}</div>
+                            {/* Barre de progression */}
+                            <div style={{ background: "#E5E7EB", borderRadius: 99, height: 8, margin: "0 8px 12px", overflow: "hidden" }}>
+                              <div style={{ height: "100%", borderRadius: 99, background: cat.color, width: (avg / 5 * 100) + "%", transition: "width 1s ease" }} />
+                            </div>
+                            <div style={{ fontSize: 10.5, color: "#9CA3AF", marginBottom: 8 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
+                            <div style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "wrap" }}>
                               {voters.map(v => (
-                                <span key={v.id} style={{ fontSize: 10, background: cat.bg, color: cat.color, borderRadius: 8, padding: "2px 7px", fontWeight: 500 }}>
-                                  {v.author} {RATING_LABELS[v.score]?.emoji}
+                                <span key={v.id} style={{ fontSize: 11, background: cat.bg, color: cat.color, borderRadius: 8, padding: "3px 8px", fontWeight: 600 }}>
+                                  {RATING_LABELS[v.score]?.emoji} {v.author}
                                 </span>
                               ))}
                             </div>
@@ -710,13 +716,19 @@
                         }}>🎭</div>
                       )}
                       {showRotiResults && (
-                        <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 10, animation: "resultReveal 0.6s ease forwards" }}>
-                          <div style={{ fontSize: 26, fontWeight: 800, color: cat.color }}>{avg} <span style={{ fontSize: 13, fontWeight: 500, color: "#6B7280" }}>/ 5</span></div>
-                          <div style={{ fontSize: 10.5, color: "#9CA3AF", marginTop: 2 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
-                          <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
+                        <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
+                          <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
+                          <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
+                          <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 10 }}>/ 5 — {RATING_LABELS[Math.round(avg)]?.label}</div>
+                          {/* Barre de progression */}
+                          <div style={{ background: "#E5E7EB", borderRadius: 99, height: 8, margin: "0 8px 12px", overflow: "hidden" }}>
+                            <div style={{ height: "100%", borderRadius: 99, background: cat.color, width: (avg / 5 * 100) + "%", transition: "width 1s ease" }} />
+                          </div>
+                          <div style={{ fontSize: 10.5, color: "#9CA3AF", marginBottom: 8 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
+                          <div style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "wrap" }}>
                             {voters.map(v => (
-                              <span key={v.id} style={{ fontSize: 10, background: cat.bg, color: cat.color, borderRadius: 8, padding: "2px 7px", fontWeight: 500 }}>
-                                {v.author} {RATING_LABELS[v.score]?.emoji}
+                              <span key={v.id} style={{ fontSize: 11, background: cat.bg, color: cat.color, borderRadius: 8, padding: "3px 8px", fontWeight: 600 }}>
+                                {RATING_LABELS[v.score]?.emoji} {v.author}
                               </span>
                             ))}
                           </div>
