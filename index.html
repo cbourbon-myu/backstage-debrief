@@ -434,14 +434,15 @@
             </div>
 
             {/* 3 COLUMNS */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 24 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 18, marginBottom: 24 }}>
               {CATEGORIES.map(cat => {
                 const col = COLUMN_MAP[cat.id];
                 const items = getFeedbacksByCategory(cat.id);
                 return (
-                  <div key={cat.id} style={{ background: "#fff", borderRadius: 14, border: "2px solid " + col.border, minHeight: 100, padding: "16px 14px" }}>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: col.color, marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
-                      {col.title}
+                  <div key={cat.id} style={{ background: "#fff", borderRadius: 16, border: "2px solid " + col.border, minHeight: 130, padding: "20px 18px" }}>
+                    <div style={{ fontSize: 17, fontWeight: 700, color: col.color, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 26 }}>{col.title.split(" ")[0]}</span>
+                      <span>{col.title.split(" ").slice(1).join(" ")}</span>
                       {items.length > 0 && <span style={{ fontSize: 11, fontWeight: 600, background: col.border + "20", color: col.color, borderRadius: 10, padding: "1px 8px" }}>{items.length}</span>}
                     </div>
                     {items.length === 0 && <div style={{ fontSize: 12.5, color: "#9CA3AF", fontStyle: "italic", padding: "6px 0" }}>Aucun retour pour le moment</div>}
@@ -499,7 +500,22 @@
 
  		   {/* ROTI */}
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14 }}>🎚️ Le ressenti de la Rétro</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="goldGrad2" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#FFD700"/>
+                      <stop offset="50%" stopColor="#FFA500"/>
+                      <stop offset="100%" stopColor="#B8860B"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="9" y="2" width="6" height="11" rx="3" fill="url(#goldGrad2)" stroke="#B8860B" strokeWidth="0.5"/>
+                  <path d="M5 11a7 7 0 0 0 14 0" stroke="url(#goldGrad2)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                  <line x1="12" y1="18" x2="12" y2="21" stroke="url(#goldGrad2)" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="9" y1="21" x2="15" y2="21" stroke="url(#goldGrad2)" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                Le ressenti de la Rétro
+              </div>
               {(() => {
                 const cat = { id: "roti", label: "🎸 ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" };
                 const myRating = getMyRating(cat.id);
