@@ -472,9 +472,12 @@
       };
       const resetAll = async () => {
         if (!confirm("⚠️ Remettre à zéro tous les feedbacks, actions et votes ?")) return;
-        await fb.setItems([]);
-        await act.setItems([]);
-        await rat.setItems([]);
+        const deleteAll = async (items, hook) => {
+          await Promise.all(items.map(item => hook.removeItem(item.id)));
+        };
+        await deleteAll(feedbacks, fb);
+        await deleteAll(actions, act);
+        await deleteAll(Array.isArray(ratingsRaw) ? ratingsRaw : [], rat);
         setCurtainTriggered({});
         setShowResults({});
       };
@@ -704,7 +707,9 @@
                     </div>
                     {items.length === 0 && <div style={{ fontSize: 12.5, color: "#9CA3AF", fontStyle: "italic", padding: "6px 0" }}>Aucun retour pour le moment</div>}
                     <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                      {items.map(fbk => (
+                      {items.map(fbk => {
+                        const isOwner = fbk.authorUid === user?.uid;
+                        return (
                         <div key={fbk.id} style={{ background: cat.bg, borderRadius: 10, padding: "9px 11px", fontSize: 13, color: "#1F2937", display: "flex", alignItems: "flex-start", gap: 8, border: "1px solid " + col.border + "33", animation: "fadeIn 0.3s ease" }}>
                           {editingFeedback === fbk.id ? (
                             <input autoFocus defaultValue={fbk.text}
@@ -714,14 +719,17 @@
                             />
                           ) : (
                             <div style={{ flex: 1 }}>
-                              <div style={{ cursor: "pointer" }} onClick={() => setEditingFeedback(fbk.id)}>{fbk.text}</div>
+                              <div style={{ cursor: isOwner ? "pointer" : "default" }} onClick={() => isOwner && setEditingFeedback(fbk.id)}>{fbk.text}</div>
                               {fbk.author && <div style={{ fontSize: 10.5, color: col.color, marginTop: 3, opacity: 0.7 }}>— {fbk.author}</div>}
                             </div>
                           )}
-                          <button onClick={() => fb.removeItem(fbk.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#9CA3AF", padding: 0, lineHeight: 1, flexShrink: 0 }}
-                            onMouseEnter={e => e.target.style.color = "#EF4444"} onMouseLeave={e => e.target.style.color = "#9CA3AF"}>✕</button>
+                          {isOwner && (
+                            <button onClick={() => fb.removeItem(fbk.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#9CA3AF", padding: 0, lineHeight: 1, flexShrink: 0 }}
+                              onMouseEnter={e => e.target.style.color = "#EF4444"} onMouseLeave={e => e.target.style.color = "#9CA3AF"}>✕</button>
+                          )}
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -880,11 +888,11 @@
                               style={{ width: "100%", border: "none", background: "transparent", fontSize: 13, fontFamily: "inherit" }}
                             />
                           ) : (
-                            <div onClick={() => setEditingAction(action.id)} style={{ fontSize: 13, color: "#1F2937", cursor: "pointer", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
+                            <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 13, color: "#1F2937", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
                           )}
                           {action.responsable && <div style={{ fontSize: 11, color: "#9D174D", marginTop: 1, fontWeight: 500 }}>👤 {action.responsable}</div>}
                         </div>
-                        <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#9CA3AF" }}
+                        <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#9CA3AF", display: action.authorUid === user?.uid ? "block" : "none" }}
                           onMouseEnter={e => e.target.style.color = "#EF4444"} onMouseLeave={e => e.target.style.color = "#9CA3AF"}>✕</button>
                       </div>
                     ))}
