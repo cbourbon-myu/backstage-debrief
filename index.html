@@ -222,9 +222,9 @@
         if (db) db.ref("config/sprintDate").set(date);
       };
 
-      const fb = useFirebase(`retro-${sprintDateKey || todayKey}/feedbacks`, [], isAuthed && !!sprintDateKey);
-      const act = useFirebase(`retro-${sprintDateKey || todayKey}/actions`, [], isAuthed && !!sprintDateKey);
-      const rat = useFirebase(`retro-${sprintDateKey || todayKey}/ratings`, [], isAuthed && !!sprintDateKey);
+      const fb = useFirebase(`retro-${sprintDateKey || todayKey}/feedbacks`, [], isAuthed && cfgLoaded);
+      const act = useFirebase(`retro-${sprintDateKey || todayKey}/actions`, [], isAuthed && cfgLoaded);
+      const rat = useFirebase(`retro-${sprintDateKey || todayKey}/ratings`, [], isAuthed && cfgLoaded);
       const feedbacks = fb.data;
       const actions = act.data;
       const ratingsRaw = rat.data;
@@ -298,13 +298,13 @@
 
       const addFeedback = () => {
         if (!feedbackText.trim()) return;
-        fb.pushItem({ id: Date.now(), category: selectedCat, text: feedbackText.trim(), author: userName });
+        fb.pushItem({ id: Date.now(), category: selectedCat, text: feedbackText.trim(), author: userName, authorUid: user.uid });
         setFeedbackText("");
         feedbackInputRef.current?.focus();
       };
       const addAction = () => {
         if (!actionDesc.trim() || actions.length >= 3) return;
-        act.pushItem({ id: Date.now(), description: actionDesc.trim(), responsable: actionResp.trim(), done: false });
+        act.pushItem({ id: Date.now(), description: actionDesc.trim(), responsable: actionResp.trim(), done: false, authorUid: user.uid });
         setActionDesc(""); setActionResp("");
       };
       const exportJSON = () => {
