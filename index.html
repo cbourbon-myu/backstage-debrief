@@ -79,7 +79,7 @@
         setError(null);
         try {
           const provider = new firebase.auth.GoogleAuthProvider();
-          provider.setCustomParameters({ hd: "myunisoft.com" });
+          provider.setCustomParameters({ hd: "myunisoft.fr" });
           await auth.signInWithPopup(provider);
         } catch (e) {
           setError(e.message);
