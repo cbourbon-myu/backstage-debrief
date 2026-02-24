@@ -363,8 +363,14 @@
         URL.revokeObjectURL(url);
       };
       const resetAll = async () => {
-        if (!confirm("⚠️ Remettre à zéro tous les feedbacks et actions ?")) return;
-        await fb.setItems([]); await act.setItems([]);
+        if (!confirm("⚠️ Remettre à zéro tous les feedbacks, actions et votes ?")) return;
+        await fb.setItems([]);
+        await act.setItems([]);
+        await rat.setItems([]);
+        setCurtainSprintTriggered(false);
+        setCurtainRotiTriggered(false);
+        setShowSprintResults(false);
+        setShowRotiResults(false);
       };
       const getFeedbacksByCategory = (catId) => feedbacks.filter(f => f.category === catId);
 
