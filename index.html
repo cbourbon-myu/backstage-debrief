@@ -42,6 +42,7 @@
     try {
       firebase.initializeApp(firebaseConfig);
       db = firebase.database();
+      window._firebaseDb = db;
       auth = firebase.auth();
     } catch(e) {
       console.warn("Firebase init error:", e);
@@ -141,14 +142,36 @@
       return { data, status, setItems, pushItem, removeItem, updateItem };
     }
 
-    // --- LOGIN SCREEN ---
+    // --- ADMINS ---
+    const ADMIN_EMAILS = ["c.bourbon@myunisoft.fr", "m.gonzalez@myunisoft.fr"];
+
+    // --- SPRINT DATE SCREEN ---
+    function SprintDateScreen({ onSave }) {
+      const [date, setDate] = React.useState(new Date().toISOString().split("T")[0]);
+      return (
+        <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ background: "#fff", borderRadius: 24, padding: "48px 40px", maxWidth: 440, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🥁</div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#1F2937", marginBottom: 8 }}>Nouveau Sprint !</div>
+            <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 24 }}>Renseigne la date du sprint pour configurer la session.</div>
+            <input type="date" value={date} onChange={e => setDate(e.target.value)}
+              style={{ width: "100%", padding: "12px 14px", borderRadius: 10, border: "1px solid #D1D5DB", fontSize: 15, marginBottom: 20, textAlign: "center" }} />
+            <button onClick={() => onSave(date)} style={{
+              width: "100%", padding: "14px 0", borderRadius: 12, border: "none",
+              background: "linear-gradient(135deg, #1c0a0a, #3b0f0f)", color: "#FDE047",
+              fontSize: 15, fontWeight: 700, cursor: "pointer"
+            }}>🎸 Lancer la rétro</button>
+          </div>
+        </div>
+      );
+    }
     function LoginScreen({ onSignIn, error, loading }) {
       return (
         <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ background: "#fff", borderRadius: 24, padding: "48px 40px", maxWidth: 440, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <img src="Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
             <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
-            <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Sprint du 24/02/2026</div>
+            <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Rétro Sprint — MyUnisoft GI</div>
             <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 32 }}>Réservé à l'équipe MyUnisoft GI</div>
             <button onClick={onSignIn} disabled={loading} style={{
               width: "100%", padding: "14px 0", borderRadius: 12, border: "1px solid #E5E7EB",
@@ -173,17 +196,33 @@
       const { user, loading: authLoading, error: authError, signIn, signOut } = useAuth();
       const isAuthed = !!user;
       const userName = user?.displayName?.split(" ")[0] || "Anonyme";
+      const isAdmin = ADMIN_EMAILS.includes(user?.email);
 
-      const fb = useFirebase("retro-2026-02-24/feedbacks", [], isAuthed);
-      const act = useFirebase("retro-2026-02-24/actions", [], isAuthed);
-      const rat = useFirebase("retro-2026-02-24/ratings", [], isAuthed);
+      const todayKey = new Date().toISOString().split("T")[0]; // "2026-02-24"
+      const cfg = useFirebase("config", {}, isAuthed);
+      const sprintDateKey = cfg.data?.sprintDate || null;
+      const sprintDateLabel = sprintDateKey
+        ? new Date(sprintDateKey + "T12:00:00").toLocaleDateString("fr-FR")
+        : "—";
+
+      const needsDateSetup = isAdmin && isAuthed && sprintDateKey !== todayKey;
+
+      const saveSprintDate = (date) => {
+        if (window._firebaseDb) {
+          window._firebaseDb.ref("config/sprintDate").set(date);
+        }
+      };
+
+      const fb = useFirebase(`retro-${sprintDateKey || todayKey}/feedbacks`, [], isAuthed && !!sprintDateKey);
+      const act = useFirebase(`retro-${sprintDateKey || todayKey}/actions`, [], isAuthed && !!sprintDateKey);
+      const rat = useFirebase(`retro-${sprintDateKey || todayKey}/ratings`, [], isAuthed && !!sprintDateKey);
       const feedbacks = fb.data;
       const actions = act.data;
       const ratingsRaw = rat.data;
 
       const RATING_CATEGORIES = [
-        { id: "ambiance", label: "Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
-        { id: "satisfaction", label: "Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
+        { id: "ambiance", label: "🎵 Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
+        { id: "satisfaction", label: "💼 Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
         { id: "roti", label: "🎸 ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" },
       ];
       const RATING_LABELS = {
@@ -229,6 +268,21 @@
         return <LoginScreen onSignIn={signIn} error={authError} loading={authLoading} />;
       }
 
+      if (needsDateSetup) {
+        return <SprintDateScreen onSave={saveSprintDate} />;
+      }
+
+      if (!sprintDateKey) {
+        return (
+          <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ textAlign: "center", color: "#6B7280", fontSize: 15 }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+              En attente de la configuration du sprint par l'animateur…
+            </div>
+          </div>
+        );
+      }
+
       const overallStatus = [fb.status, act.status].includes("error") ? "error"
         : [fb.status, act.status].includes("saving") ? "saving"
         : [fb.status, act.status].includes("connecting") ? "connecting" : "synced";
@@ -244,24 +298,14 @@
         act.pushItem({ id: Date.now(), description: actionDesc.trim(), responsable: actionResp.trim(), done: false });
         setActionDesc(""); setActionResp("");
       };
-const exportMarkdown = () => {
-  const lines = [
-    `# 🥁 Backstage Debrief — Sprint du 24/02/2026\n`,
-    `## 🎸 Ce qui a rocké`,
-    ...feedbacks.filter(f => f.category === "rock").map(f => `- ${f.text} *(${f.author})*`),
-    `\n## 🔇 Les fausses notes`,
-    ...feedbacks.filter(f => f.category === "fausse").map(f => `- ${f.text} *(${f.author})*`),
-    `\n## 💫 À améliorer`,
-    ...feedbacks.filter(f => f.category === "ameliorer").map(f => `- ${f.text} *(${f.author})*`),
-    `\n## 🎯 Actions pour le prochain sprint`,
-    ...actions.map(a => `- [${a.done ? "x" : " "}] ${a.description} — 👤 ${a.responsable}`),
-  ];
-  const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a"); a.href = url;
-  a.download = "retrospective-2026-02-24.md"; a.click();
-  URL.revokeObjectURL(url);
-};
+      const exportJSON = () => {
+        const data = { date: new Date().toISOString(), feedbacks, actions };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a"); a.href = url;
+        a.download = `retrospective-${sprintDateKey}.json`; a.click();
+        URL.revokeObjectURL(url);
+      };
       const resetAll = async () => {
         if (!confirm("⚠️ Remettre à zéro tous les feedbacks et actions ?")) return;
         await fb.setItems([]); await act.setItems([]);
@@ -336,7 +380,7 @@ const exportMarkdown = () => {
               padding: "10px 18px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "#6B21A8",
             }}>
               <span style={{ fontSize: 18 }}>👥</span>
-              <div><strong>Mode collaboratif temps réel</strong> — Connecté en tant que {user.displayName}. Tous les retours sont synchronisés instantanément.</div>
+              <div><strong>Mode collaboratif temps réel</strong> — Sprint du {sprintDateLabel} · Connecté en tant que {user.displayName}. Tous les retours sont synchronisés instantanément.</div>
             </div>
 
             {/* RÈGLES DU PIT */}
