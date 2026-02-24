@@ -261,35 +261,22 @@
       }, [isAuthed, sprintDateKey, user?.uid]);
 
       const connectedUids = connectedUsers.map(u => u.uid);
-      const everyoneVotedSprint = connectedUids.length > 0 &&
-        ["ambiance", "satisfaction"].every(catId =>
-          connectedUids.every(uid =>
-            Array.isArray(ratingsRaw) && ratingsRaw.some(r => r.category === catId && r.authorUid === uid)
-          )
-        );
-      const everyoneVotedRoti = connectedUids.length > 0 &&
+      const everyoneVotedFor = (catId) => connectedUids.length > 0 &&
         connectedUids.every(uid =>
-          Array.isArray(ratingsRaw) && ratingsRaw.some(r => r.category === "roti" && r.authorUid === uid)
+          Array.isArray(ratingsRaw) && ratingsRaw.some(r => r.category === catId && r.authorUid === uid)
         );
 
-      // --- RIDEAU ---
-      const [curtainSprintTriggered, setCurtainSprintTriggered] = useState(false);
-      const [curtainRotiTriggered, setCurtainRotiTriggered] = useState(false);
-      const [showSprintResults, setShowSprintResults] = useState(false);
-      const [showRotiResults, setShowRotiResults] = useState(false);
+      const [curtainTriggered, setCurtainTriggered] = useState({});
+      const [showResults, setShowResults] = useState({});
 
       useEffect(() => {
-        if (everyoneVotedSprint && !curtainSprintTriggered) {
-          setCurtainSprintTriggered(true);
-          setTimeout(() => setShowSprintResults(true), 1600);
-        }
-      }, [everyoneVotedSprint]);
-      useEffect(() => {
-        if (everyoneVotedRoti && !curtainRotiTriggered) {
-          setCurtainRotiTriggered(true);
-          setTimeout(() => setShowRotiResults(true), 1600);
-        }
-      }, [everyoneVotedRoti]);
+        ["ambiance", "satisfaction", "roti"].forEach(catId => {
+          if (everyoneVotedFor(catId) && !curtainTriggered[catId]) {
+            setCurtainTriggered(prev => ({ ...prev, [catId]: true }));
+            setTimeout(() => setShowResults(prev => ({ ...prev, [catId]: true })), 1600);
+          }
+        });
+      }, [ratingsRaw, connectedUids.length]);
 
       const hasVotedSprint = ["ambiance", "satisfaction"].every(id => getMyRating(id));
       const hasVotedRoti = !!getMyRating("roti");
@@ -367,10 +354,8 @@
         await fb.setItems([]);
         await act.setItems([]);
         await rat.setItems([]);
-        setCurtainSprintTriggered(false);
-        setCurtainRotiTriggered(false);
-        setShowSprintResults(false);
-        setShowRotiResults(false);
+        setCurtainTriggered({});
+        setShowResults({});
       };
       const getFeedbacksByCategory = (catId) => feedbacks.filter(f => f.category === catId);
 
@@ -541,8 +526,7 @@
                           Tu as voté : {RATING_LABELS[myScore].emoji} {RATING_LABELS[myScore].label}
                         </div>
                       )}
-                      {/* Compteur de votes en attente */}
-                      {!showSprintResults && (
+                      {!showResults[cat.id] && (
                         <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 4, borderTop: "1px solid " + cat.border + "33", paddingTop: 8 }}>
                           {connectedUids.length > 0 ? (
                             <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
@@ -553,7 +537,7 @@
                       )}
                       {/* RIDEAU + RÉSULTATS */}
                       <div style={{ position: "relative", marginTop: 6 }}>
-                        {curtainSprintTriggered && !showSprintResults && (
+                        {curtainTriggered[cat.id] && !showResults[cat.id] && (
                           <div style={{
                             position: "absolute", inset: "-8px -14px", zIndex: 10, borderRadius: 12,
                             background: "repeating-linear-gradient(180deg, #8B0000 0px, #DC143C 18px, #8B0000 36px)",
@@ -562,7 +546,7 @@
                             fontSize: 28,
                           }}>🎭</div>
                         )}
-                        {showSprintResults && (
+                        {showResults[cat.id] && (
                           <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
                             <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
                             <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
@@ -696,7 +680,7 @@
                         Tu as voté : {RATING_LABELS[myScore].emoji} {RATING_LABELS[myScore].label}
                       </div>
                     )}
-                    {!showRotiResults && (
+                    {!showResults[cat.id] && (
                       <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 4, borderTop: "1px solid " + cat.border + "33", paddingTop: 8 }}>
                         {connectedUids.length > 0 ? (
                           <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
@@ -706,7 +690,7 @@
                       </div>
                     )}
                     <div style={{ position: "relative", marginTop: 6 }}>
-                      {curtainRotiTriggered && !showRotiResults && (
+                      {curtainTriggered[cat.id] && !showResults[cat.id] && (
                         <div style={{
                           position: "absolute", inset: "-8px -14px", zIndex: 10, borderRadius: 12,
                           background: "repeating-linear-gradient(180deg, #8B0000 0px, #DC143C 18px, #8B0000 36px)",
@@ -715,7 +699,7 @@
                           fontSize: 28,
                         }}>🎭</div>
                       )}
-                      {showRotiResults && (
+                      {showResults[cat.id] && (
                         <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
                           <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
                           <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
