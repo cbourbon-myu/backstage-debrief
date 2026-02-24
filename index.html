@@ -198,19 +198,28 @@
       const userName = user?.displayName?.split(" ")[0] || "Anonyme";
       const isAdmin = ADMIN_EMAILS.includes(user?.email);
 
-      const todayKey = new Date().toISOString().split("T")[0]; // "2026-02-24"
-      const cfg = useFirebase("config", {}, isAuthed);
-      const sprintDateKey = cfg.data?.sprintDate || null;
+      const todayKey = new Date().toISOString().split("T")[0];
+      const [sprintDateKey, setSprintDateKey] = useState(null);
+      const [cfgLoaded, setCfgLoaded] = useState(false);
+
+      useEffect(() => {
+        if (!isAuthed || !db) return;
+        const ref = db.ref("config/sprintDate");
+        ref.on("value", (snap) => {
+          setSprintDateKey(snap.val() || null);
+          setCfgLoaded(true);
+        });
+        return () => ref.off("value");
+      }, [isAuthed]);
+
       const sprintDateLabel = sprintDateKey
         ? new Date(sprintDateKey + "T12:00:00").toLocaleDateString("fr-FR")
         : "—";
 
-      const needsDateSetup = isAdmin && isAuthed && sprintDateKey !== todayKey;
+      const needsDateSetup = isAdmin && cfgLoaded && sprintDateKey !== todayKey;
 
       const saveSprintDate = (date) => {
-        if (window._firebaseDb) {
-          window._firebaseDb.ref("config/sprintDate").set(date);
-        }
+        if (db) db.ref("config/sprintDate").set(date);
       };
 
       const fb = useFirebase(`retro-${sprintDateKey || todayKey}/feedbacks`, [], isAuthed && !!sprintDateKey);
@@ -256,7 +265,7 @@
       const [editingAction, setEditingAction] = useState(null);
       const feedbackInputRef = useRef(null);
 
-      if (authLoading) {
+      if (authLoading || (isAuthed && !cfgLoaded)) {
         return (
           <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ fontSize: 48 }}>🥁</div>
