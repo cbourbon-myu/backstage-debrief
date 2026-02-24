@@ -514,20 +514,20 @@
                   ))}
                 </div>
               </div>
-              <div style={{ width: 320, minHeight: "100%", flexShrink: 0, position: "relative" }}>
-  		{/* Image avec opacité */}
- 		 <div style={{
- 		   position: "absolute", inset: 0,
-  		  backgroundImage: IMG_RULES,
- 		   backgroundSize: "cover", backgroundPosition: "center",
- 		   opacity: 0.4,
- 		 }} />
- 		 {/* Dégradé de fondu vers la gauche */}
- 		 <div style={{
- 		   position: "absolute", inset: 0,
- 		   width: 80,
- 		   background: "linear-gradient(to right, #FFF6EE, transparent)",
- 		 }} />
+              <div style={{ width: 460, minHeight: "100%", flexShrink: 0, position: "relative" }}>
+                {/* Image avec opacité */}
+                <div style={{
+                  position: "absolute", inset: 0,
+                  backgroundImage: IMG_RULES,
+                  backgroundSize: "cover", backgroundPosition: "center",
+                  opacity: 0.6,
+                }} />
+                {/* Dégradé de fondu vers la gauche — moins proche */}
+                <div style={{
+                  position: "absolute", inset: 0,
+                  width: 140,
+                  background: "linear-gradient(to right, #FFF6EE 40%, transparent)",
+                }} />
               </div>
   	   </div>
 
@@ -552,7 +552,7 @@
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 {[
                   { id: "ambiance", label: "Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
-                  { id: "satisfaction", label: "Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
+                  { id: "satisfaction", label: "💼 Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
                 ].map(cat => {
                   const myRating = getMyRating(cat.id);
                   const myScore = myRating?.score;
