@@ -194,7 +194,7 @@
             alignItems: "center", justifyContent: "center", gap: 12,
             animation: "curtainText 2.4s ease forwards",
           }}>
-            <div style={{ fontSize: 64 }}>🎭</div>
+            <div style={{ fontSize: 64 }}>🤔</div>
             <div style={{ fontSize: 22, fontWeight: 800, color: "#FFD700", textShadow: "0 2px 8px rgba(0,0,0,0.6)", textAlign: "center", padding: "0 20px" }}>
               Résultats {catLabel}
             </div>
@@ -460,18 +460,18 @@
         const satisfactionVotes = Array.isArray(ratingsRaw) ? ratingsRaw.filter(r => r.category === "satisfaction") : [];
         const rotiVotes = Array.isArray(ratingsRaw) ? ratingsRaw.filter(r => r.category === "roti") : [];
         const avg = (items) => items.length ? (items.reduce((s, r) => s + r.score, 0) / items.length).toFixed(1) : "—";
-        const LABELS = { 1: "💀 Silence de mort", 2: "🎵 Petite étincelle", 3: "🎸 En rodage", 4: "🤘 Ça groove !", 5: "⭐ Épique !" };
+        const LABELS = { 1: "💀 Silence de mort", 2: "🎵 Petite étincelle", 3: "🎸 En rodage", 4: "🥳 Ça groove !", 5: "⭐ Épique !" };
 
         const lines = [];
-        lines.push(`# Rétro Sprint — ${dateLabel}`);
+        lines.push(`# 🥁 Rétro Sprint — ${dateLabel}`);
         lines.push(`> Exporté le ${new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}`);
         lines.push("");
-        lines.push("## Ressenti du Sprint");
+        lines.push("## 🎙️ Ressenti du Sprint");
         lines.push("");
         lines.push("| Thème | Moyenne | Votes |");
         lines.push("|---|---|---|");
-        lines.push(`| Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
-        lines.push(`| Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push(`| 🥳 Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push(`| 📊 Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
         lines.push("");
         lines.push("## 🎸 Ce qui a rocké");
         lines.push("");
@@ -496,7 +496,7 @@
           actions.forEach(a => lines.push(`| ${a.description} | ${a.responsable || "—"} | ${a.done ? "✅ Fait" : "⏳ À faire"} |`));
           lines.push("");
         }
-        lines.push("## ROTI");
+        lines.push("## 🍖 ROTI");
         lines.push("");
         lines.push(`**Moyenne : ${avg(rotiVotes)} / 5**`);
         if (rotiVotes.length) {
@@ -521,12 +521,7 @@
         setConfluenceStatus("loading");
         setConfluenceUrl(null);
         try {
-          const md = generateMarkdown()
-            .replace(/🎸 Rétro Sprint/g, "🥁 Rétro Sprint")
-            .replace(/🎚️/g, "🎙️")
-            .replace(/🎼/g, "🍖")
-            .replace(/🤘/g, "🥳")
-            .replace(/💼/g, "📊");
+          const md = generateMarkdown();
           const response = await fetch(CONFLUENCE_FUNCTION_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -735,7 +730,7 @@
                     }}
                       onMouseEnter={e => e.target.style.background = "rgba(255,255,255,0.06)"}
                       onMouseLeave={e => e.target.style.background = "none"}
-                    >🚪 Se déconnecter</button>
+                    ><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/logout.png" style={{ width: 16, height: 16, objectFit: "contain" }} /> Se déconnecter</button>
                   </div>
                 )}
               </div>
@@ -774,7 +769,7 @@
                     onMouseLeave={() => setShowPitTooltip(false)}
                     style={{ cursor: "pointer", position: "relative" }}
                   >
-                    Règles du pit
+                    Règles du Pitt
                     {showPitTooltip && (
                       <div style={{
                         position: "absolute", bottom: "calc(100% + 14px)", left: "50%", transform: "translateX(-50%)",
@@ -811,14 +806,14 @@
                             </div>
                             <div style={{
                               fontSize: 16, fontWeight: 700, color: "#FAFAF9",
-                              textTransform: "uppercase", lineHeight: 1.4,
+                              fontStyle: "italic", lineHeight: 1.4,
                               textShadow: "0 2px 8px rgba(220,38,38,0.3)",
                             }}>
                               "Il n'y a pas de GI Club."
                             </div>
                             <div style={{
                               marginTop: 10, fontSize: 9, color: "rgba(255,255,255,0.25)",
-                              letterSpacing: 1.5, fontStyle: "italic",
+                              letterSpacing: 1.5, textTransform: "uppercase",
                             }}>
                               — Tyler Durden, probablement
                             </div>
