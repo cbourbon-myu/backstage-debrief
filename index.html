@@ -18,6 +18,8 @@
     input:focus { outline: none; }
     button { font-family: inherit; }
     @media print { .no-print { display: none !important; } body { background: #fff; } }
+    .vote-icon { transition: transform 0.3s ease, filter 0.3s ease !important; }
+    .vote-icon:hover { transform: scale(1.3) rotate(-8deg) !important; filter: drop-shadow(0 2px 8px rgba(249,115,22,0.5)) !important; }
   </style>
 </head>
 <body>
@@ -900,15 +902,15 @@
                     <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: "16px 14px", textAlign: "center" }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                       {cat.id === "ambiance" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.3) rotate(-8deg)"; e.currentTarget.style.filter = "drop-shadow(0 2px 8px rgba(249,115,22,0.5))"; }} onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.filter = "none"; }} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer", transition: "transform 0.3s ease, filter 0.3s ease" }} />
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.3) rotate(-8deg)"; e.currentTarget.style.filter = "drop-shadow(0 2px 8px rgba(249,115,22,0.5))"; }} onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.filter = "none"; }} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer", transition: "transform 0.3s ease, filter 0.3s ease" }} />
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
                       ) : null}
                       {cat.label}
                     </div>
                       <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12 }}>
                         {[1,2,3,4,5].map(score => (
-                          <button key={score} onClick={() => submitRating(cat.id, score)} style={{
+                          <button key={score} onClick={() => submitRating(cat.id, score)} className="vote-icon" style={{
                             width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
                             background: myScore === score ? cat.bg : "#FFFAF5",
                             fontSize: 26, cursor: "pointer", transition: "all 0.2s",
@@ -1058,12 +1060,12 @@
                 return (
                   <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: "20px 20px", textAlign: "center", maxWidth: 400 }}>
                     <div style={{ fontSize: 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
-                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.3) rotate(-8deg)"; e.currentTarget.style.filter = "drop-shadow(0 2px 8px rgba(249,115,22,0.5))"; }} onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.filter = "none"; }} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer", transition: "transform 0.3s ease, filter 0.3s ease" }} />
+                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
                       <span>ROTI</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12, marginTop: 12 }}>
                       {[1,2,3,4,5].map(score => (
-                        <button key={score} onClick={() => submitRating(cat.id, score)} style={{
+                        <button key={score} onClick={() => submitRating(cat.id, score)} className="vote-icon" style={{
                           width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
                           background: myScore === score ? cat.bg : "#FFFAF5",
                           fontSize: 26, cursor: "pointer", transition: "all 0.2s",
@@ -1219,6 +1221,8 @@
       } from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
             @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
             @keyframes tooltipFadeIn { 0% { opacity: 0; transform: translateX(-50%) translateY(6px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
+            .vote-icon { transition: transform 0.3s ease, filter 0.3s ease !important; }
+            .vote-icon:hover { transform: scale(1.3) rotate(-8deg) !important; filter: drop-shadow(0 2px 8px rgba(249,115,22,0.5)) !important; }
           `}</style>
           {zoomedImage && (
             <div onClick={() => setZoomedImage(null)} style={{
