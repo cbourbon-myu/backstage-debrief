@@ -642,7 +642,7 @@
                   </div>
                 )}
               </div>
-              {/* Dropdown Intégrations */}
+              {/* Dropdown Partager */}
               <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowIntegration(!showIntegration); setShowPresence(false); setShowUserMenu(false); }} className="no-print" style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
@@ -650,7 +650,7 @@
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
                   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} />
-                  <span style={{ fontSize: 12, fontWeight: 500 }}>Intégrations</span>
+                  <span style={{ fontSize: 12, fontWeight: 500 }}>Partager</span>
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showIntegration ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
                 {showIntegration && (
