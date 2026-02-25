@@ -519,7 +519,7 @@
 			  
             <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
               {/* User badge with photo */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)", borderRadius: 8, padding: "4px 12px 4px 4px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)", borderRadius: 8, padding: "5px 12px 5px 5px" }}>
                 {user.photoURL && <img src={user.photoURL} style={{ width: 24, height: 24, borderRadius: "50%" }} referrerPolicy="no-referrer" />}
                 <span style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}>{userName}</span>
               </div>
@@ -569,15 +569,15 @@
               </div>
               <button onClick={exportMarkdown} className="no-print" style={{
                 background: "rgba(255,255,255,0.15)", border: "1.2px solid rgba(255,255,255,0.55)",
-                borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer",
-              }}>⬇ Exporter</button>
+                borderRadius: 8, padding: "5px 12px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer",
+              }}>⬇ Markdown</button>
               <button onClick={resetAll} className="no-print" style={{
                 background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
-                borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7,
+                borderRadius: 8, padding: "5px 12px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7,
               }}>🔄 Reset</button>
               <button onClick={signOut} className="no-print" style={{
                 background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
-                borderRadius: 8, padding: "6px 14px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7,
+                borderRadius: 8, padding: "5px 12px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7,
               }}>Déconnexion</button>
             </div>
           </div>
