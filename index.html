@@ -585,9 +585,6 @@
   			  <img src="Batterie.png" style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginRight: 12 }} />
   			  BACKSTAGE DEBRIEF
  			 </div>
- 			 <div style={{ fontSize: 13, color: "#fff", opacity: 0.92, marginTop: 4 }}>
- 			   Tous les 15 jours • Mardi 14h30-15h30 • Ce qui se dit en backstage reste en backstage 🤫
-			  </div>
 			</div>
 			  
             <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
@@ -743,12 +740,17 @@
                 )}
               </div>
             </div>
-            {/* Info collaborative — alignée à droite */}
+            {/* Info header — sous-titre à gauche, mode collab à droite */}
             <div style={{
-              width: "100%", textAlign: "right", position: "relative", zIndex: 1,
-              fontSize: 10.5, color: "rgba(255,255,255,0.55)", marginTop: -4,
+              width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
+              position: "relative", zIndex: 1, marginTop: -4,
             }}>
-              <em>Mode collaboratif temps réel</em> — Sprint du {sprintDateLabel} · Connecté en tant que {user.displayName}
+              <div style={{ fontSize: 13, color: "#fff", opacity: 0.92 }}>
+                Tous les 15 jours • Mardi 14h30-15h30 • Ce qui se dit en backstage reste en backstage 🤫
+              </div>
+              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.55)" }}>
+                <em>Mode collaboratif temps réel</em> — Sprint du {sprintDateLabel}
+              </div>
             </div>
           </div>
 
@@ -809,16 +811,16 @@
                             </div>
                             <div style={{
                               fontSize: 16, fontWeight: 700, color: "#FAFAF9",
-                              textTransform: "uppercase", lineHeight: 1.4,
+                              fontStyle: "italic", lineHeight: 1.4,
                               textShadow: "0 2px 8px rgba(220,38,38,0.3)",
                             }}>
                               "Il n'y a pas de GI Club."
                             </div>
                             <div style={{
                               marginTop: 10, fontSize: 9, color: "rgba(255,255,255,0.25)",
-                              letterSpacing: 1.5, fontStyle: "italic",
+                              letterSpacing: 1.5, textTransform: "uppercase",
                             }}>
-                              - Tyler Durden, probablement...
+                              — Tyler Durden, probablement
                             </div>
                           </div>
                         </div>
