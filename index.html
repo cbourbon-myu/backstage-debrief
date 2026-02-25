@@ -335,7 +335,16 @@
           const val = snap.val();
           if (!val) { setConnectedUsers([]); return; }
           const now = Date.now();
-          const active = Object.values(val).filter(u => !u.lastSeen || (now - u.lastSeen) < 90000);
+          const entries = Object.entries(val);
+          const active = [];
+          entries.forEach(([uid, u]) => {
+            if (u.lastSeen && (now - u.lastSeen) < 90000) {
+              active.push(u);
+            } else if (!u.lastSeen || (now - u.lastSeen) >= 90000) {
+              // Nettoyer les entrées fantômes
+              db.ref(`retro-${sprintDateKey}/presence/${uid}`).remove();
+            }
+          });
           setConnectedUsers(active);
         });
 
