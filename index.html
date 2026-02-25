@@ -767,7 +767,7 @@
             {/* RÈGLES DU PIT */}
             <div style={{
               borderRadius: 16, padding: 0,
-              marginBottom: 20, position: "relative", display: "flex", alignItems: "stretch", minHeight: 220, overflow: "hidden",
+              marginBottom: 20, position: "relative", display: "flex", alignItems: "stretch", minHeight: 220,
             }}>
               {/* Image de fond sur tout l'encart */}
               <div style={{
@@ -775,11 +775,13 @@
                 backgroundImage: IMG_RULES,
                 backgroundSize: "cover", backgroundPosition: "center",
                 opacity: 0.5,
+                borderRadius: 16,
               }} />
               {/* Overlay dégradé : opaque à gauche → transparent à droite */}
               <div style={{
                 position: "absolute", inset: 0,
                 background: "linear-gradient(to right, #FFF6EE 0%, #FFF6EE 40%, rgba(255,246,238,0.7) 60%, rgba(255,246,238,0.2) 80%, transparent 100%)",
+                borderRadius: 16,
               }} />
 
               <div style={{ flex: 1, padding: "0px 28px", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
