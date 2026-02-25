@@ -402,6 +402,7 @@
       const [showUserMenu, setShowUserMenu] = useState(false);
       const [showIntegration, setShowIntegration] = useState(false);
       const [zoomedImage, setZoomedImage] = useState(null);
+      const [showPitTooltip, setShowPitTooltip] = useState(false);
       const [confluenceStatus, setConfluenceStatus] = useState(null);
       const [confluenceUrl, setConfluenceUrl] = useState(null);
       const feedbackInputRef = useRef(null);
@@ -764,9 +765,71 @@
               marginBottom: 20, position: "relative", overflow: "hidden", display: "flex", alignItems: "stretch", minHeight: 220,
             }}>
               <div style={{ flex: 1, padding: "0px 28px", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: "#78350F", marginBottom: 6, display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ fontSize: 24, fontWeight: 700, color: "#78350F", marginBottom: 6, display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
                   <span style={{ fontSize: 36 }}>🎼</span>
-                  Règles du pit
+                  <span
+                    onMouseEnter={() => setShowPitTooltip(true)}
+                    onMouseLeave={() => setShowPitTooltip(false)}
+                    style={{ cursor: "pointer", position: "relative" }}
+                  >
+                    Règles du pit
+                    {showPitTooltip && (
+                      <div style={{
+                        position: "absolute", bottom: "calc(100% + 14px)", left: "50%", transform: "translateX(-50%)",
+                        minWidth: 380, padding: 0, zIndex: 200, animation: "tooltipFadeIn 0.3s ease",
+                        borderRadius: 12, overflow: "hidden",
+                        boxShadow: "0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)",
+                      }}>
+                        {/* Fond Fight Club */}
+                        <div style={{
+                          background: "linear-gradient(135deg, #1a0a0a 0%, #2d1010 40%, #1a0505 100%)",
+                          padding: "18px 22px",
+                          position: "relative",
+                          overflow: "hidden",
+                        }}>
+                          {/* Texture grain */}
+                          <div style={{
+                            position: "absolute", inset: 0, opacity: 0.08,
+                            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)",
+                          }} />
+                          {/* Barre rouge sang en haut */}
+                          <div style={{
+                            position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                            background: "linear-gradient(90deg, transparent, #DC2626, #B91C1C, transparent)",
+                          }} />
+                          {/* Texte */}
+                          <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
+                            <div style={{
+                              fontSize: 10, fontWeight: 800, letterSpacing: 3, textTransform: "uppercase",
+                              color: "#DC2626", marginBottom: 8, fontFamily: "'DM Sans', sans-serif",
+                            }}>
+                              🥊 1ère règle du GI Club 🥊
+                            </div>
+                            <div style={{
+                              fontSize: 16, fontWeight: 700, color: "#FAFAF9",
+                              fontStyle: "italic", lineHeight: 1.4,
+                              textShadow: "0 2px 8px rgba(220,38,38,0.3)",
+                            }}>
+                              "Il n'y a pas de GI Club."
+                            </div>
+                            <div style={{
+                              marginTop: 10, fontSize: 9, color: "rgba(255,255,255,0.25)",
+                              letterSpacing: 1.5, textTransform: "uppercase",
+                            }}>
+                              — Tyler Durden, probablement
+                            </div>
+                          </div>
+                        </div>
+                        {/* Flèche */}
+                        <div style={{
+                          position: "absolute", bottom: -8, left: "50%", transform: "translateX(-50%)",
+                          width: 0, height: 0,
+                          borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
+                          borderTop: "10px solid #1a0a0a",
+                        }} />
+                      </div>
+                    )}
+                  </span>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 9, maxWidth: 700, paddingLeft: 60 }}>
                   {["Respect mutuel", "Focus sur les processus, pas sur les personnes", "Tout le monde participe", "Ce qui est dit en rétro reste en rétro", "On identifie, on propose, on agit"].map((rule, i) => (
@@ -1142,6 +1205,7 @@
         100% { opacity: 1; transform: translateY(0); }
       } from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
             @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+            @keyframes tooltipFadeIn { 0% { opacity: 0; transform: translateX(-50%) translateY(6px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
           `}</style>
           {zoomedImage && (
             <div onClick={() => setZoomedImage(null)} style={{
