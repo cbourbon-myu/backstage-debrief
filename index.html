@@ -672,9 +672,9 @@
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Fichier .md en local</div>
                       </div>
                     </button>
-                    <button onClick={() => { exportToConfluence(); }} disabled={confluenceStatus === "loading"} style={{
+                    <button onClick={() => { exportToConfluence(); }} disabled={confluenceStatus === "loading" || confluenceStatus === "success"} style={{
                       display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
-                      background: "none", border: "none", cursor: confluenceStatus === "loading" ? "wait" : "pointer",
+                      background: "none", border: "none", cursor: (confluenceStatus === "loading" || confluenceStatus === "success") ? "default" : "pointer",
                       color: "#fff", fontSize: 12, fontWeight: 500, fontFamily: "inherit", textAlign: "left",
                       opacity: confluenceStatus === "loading" ? 0.5 : 1,
                     }}
@@ -690,9 +690,10 @@
                       </div>
                     </button>
                     {confluenceUrl && (
-                      <a href={confluenceUrl} target="_blank" rel="noopener" style={{
+                      <a href={confluenceUrl} target="_blank" rel="noopener" onClick={e => e.stopPropagation()} style={{
                         display: "flex", alignItems: "center", gap: 10, padding: "6px 14px",
                         fontSize: 11, color: "#FDE047", textDecoration: "none", fontWeight: 500,
+                        cursor: "pointer", position: "relative", zIndex: 10,
                       }}
                         onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
                         onMouseLeave={e => e.currentTarget.style.background = "none"}
