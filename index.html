@@ -787,10 +787,12 @@
                           position: "relative",
                           overflow: "hidden",
                         }}>
-                          {/* Texture grain */}
+                          {/* Image Fight Club en fond */}
                           <div style={{
-                            position: "absolute", inset: 0, opacity: 0.08,
-                            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)",
+                            position: "absolute", inset: 0,
+                            backgroundImage: "url('https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/GIClub.png')",
+                            backgroundSize: "cover", backgroundPosition: "center",
+                            opacity: 0.15,
                           }} />
                           {/* Barre rouge sang en haut */}
                           <div style={{
@@ -814,9 +816,9 @@
                             </div>
                             <div style={{
                               marginTop: 10, fontSize: 9, color: "rgba(255,255,255,0.25)",
-                              letterSpacing: 1.5, fontStyle: "italic",
+                              letterSpacing: 1.5, textTransform: "uppercase",
                             }}>
-                              — Tyler Durden, probablement...
+                              — Tyler Durden, probablement
                             </div>
                           </div>
                         </div>
