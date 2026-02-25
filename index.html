@@ -230,7 +230,7 @@
     function LoginScreen({ onSignIn, error, loading }) {
       return (
         <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ background: "#fff", borderRadius: 24, padding: "56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
+          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: "56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <img src="assets/Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
             <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Rétro Sprint — MyUnisoft GI</div>
@@ -900,9 +900,9 @@
                     <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: "16px 14px", textAlign: "center" }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                       {cat.id === "ambiance" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
+                        <img className="vote-icon" src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
+                        <img className="vote-icon" src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
                       ) : null}
                       {cat.label}
                     </div>
@@ -967,7 +967,7 @@
                 const items = getFeedbacksByCategory(cat.id);
                 return (
                   <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 16, border: "2px solid " + col.border, minHeight: 130, padding: "20px 18px" }}>
-                    <div style={{ fontSize: 17, fontWeight: 700, color: col.color, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ fontSize: 17, fontWeight: 700, color: col.border, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontSize: 26 }}>{col.title.split(" ")[0]}</span>
                       <span>{col.title.split(" ").slice(1).join(" ")}</span>
                       {items.length > 0 && <span style={{ fontSize: 11, fontWeight: 600, background: col.border + "20", color: col.color, borderRadius: 10, padding: "1px 8px" }}>{items.length}</span>}
@@ -1058,7 +1058,7 @@
                 return (
                   <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: "20px 20px", textAlign: "center", maxWidth: 400 }}>
                     <div style={{ fontSize: 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
-                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
+                      <img className="vote-icon" src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
                       <span>ROTI</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12, marginTop: 12 }}>
@@ -1189,7 +1189,7 @@
             </div>
 
             {/* FOOTER */}
-            <div style={{ textAlign: "center", fontSize: 13.5, color: "#DB2777", fontStyle: "italic", opacity: 0.65, padding: "6px 0 16px" }}>
+            <div style={{ textAlign: "center", fontSize: 13.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "6px 0 16px" }}>
               "On repart avec 2-3 actions concrètes. L'idée : être un peu meilleurs pour le prochain set." 🤘
             </div>
           </div>
@@ -1219,6 +1219,9 @@
       } from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
             @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
             @keyframes tooltipFadeIn { 0% { opacity: 0; transform: translateX(-50%) translateY(6px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
+            @keyframes iconBounce { 0% { transform: scale(1); } 40% { transform: scale(1.3) rotate(-8deg); } 70% { transform: scale(1.15) rotate(4deg); } 100% { transform: scale(1.25) rotate(0deg); } }
+            .vote-icon { transition: transform 0.2s ease, filter 0.2s ease; }
+            .vote-icon:hover { animation: iconBounce 0.4s ease forwards; filter: drop-shadow(0 2px 8px rgba(249,115,22,0.5)); }
           `}</style>
           {zoomedImage && (
             <div onClick={() => setZoomedImage(null)} style={{
