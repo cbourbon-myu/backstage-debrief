@@ -853,19 +853,22 @@
                   ))}
                 </div>
               </div>
-              <div style={{ width: 460, alignSelf: "stretch", flexShrink: 0, position: "relative", overflow: "hidden", borderRadius: "0 16px 16px 0" }}>
+              <div style={{ width: 460, alignSelf: "stretch", flexShrink: 0, position: "relative", overflow: "visible", borderRadius: "0 16px 16px 0" }}>
                 {/* Image avec opacité */}
                 <div style={{
                   position: "absolute", inset: 0,
                   backgroundImage: IMG_RULES,
                   backgroundSize: "cover", backgroundPosition: "center",
                   opacity: 0.6,
+                  borderRadius: "0 16px 16px 0",
+                  overflow: "hidden",
                 }} />
-                {/* Dégradé de fondu vers la gauche */}
+                {/* Dégradé de fondu vers la gauche — déborde pour masquer la transition */}
                 <div style={{
-                  position: "absolute", inset: 0,
-                  width: "60%",
-                  background: "linear-gradient(to right, #FFF6EE 10%, rgba(255,246,238,0.6) 40%, transparent 100%)",
+                  position: "absolute", top: 0, bottom: 0, right: 0,
+                  left: -80,
+                  background: "linear-gradient(to right, #FFF6EE 0%, rgba(255,246,238,0.5) 30%, transparent 70%)",
+                  pointerEvents: "none",
                 }} />
               </div>
   	   </div>
