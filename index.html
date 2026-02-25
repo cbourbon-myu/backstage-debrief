@@ -312,14 +312,44 @@
       useEffect(() => {
         if (!isAuthed || !db || !sprintDateKey) return;
         const presenceRef = db.ref(`retro-${sprintDateKey}/presence/${user.uid}`);
-        presenceRef.set({ name: userName, uid: user.uid });
-        presenceRef.onDisconnect().remove();
         const allRef = db.ref(`retro-${sprintDateKey}/presence`);
+        const connectedRef = db.ref(".info/connected");
+
+        const registerPresence = () => {
+          presenceRef.set({ name: userName, uid: user.uid, lastSeen: Date.now() });
+          presenceRef.onDisconnect().remove();
+        };
+
+        // Re-register on reconnect
+        connectedRef.on("value", snap => {
+          if (snap.val() === true) registerPresence();
+        });
+
+        // Heartbeat every 30s
+        const heartbeat = setInterval(() => {
+          presenceRef.update({ lastSeen: Date.now() });
+        }, 30000);
+
+        // Listen to all presence entries, filter stale (>90s)
         allRef.on("value", snap => {
           const val = snap.val();
-          setConnectedUsers(val ? Object.values(val) : []);
+          if (!val) { setConnectedUsers([]); return; }
+          const now = Date.now();
+          const active = Object.values(val).filter(u => !u.lastSeen || (now - u.lastSeen) < 90000);
+          setConnectedUsers(active);
         });
-        return () => { presenceRef.remove(); allRef.off("value"); };
+
+        // Cleanup on page unload
+        const handleUnload = () => presenceRef.remove();
+        window.addEventListener("beforeunload", handleUnload);
+
+        return () => {
+          clearInterval(heartbeat);
+          presenceRef.remove();
+          allRef.off("value");
+          connectedRef.off("value");
+          window.removeEventListener("beforeunload", handleUnload);
+        };
       }, [isAuthed, sprintDateKey, user?.uid]);
 
       const connectedUids = connectedUsers.map(u => u.uid);
