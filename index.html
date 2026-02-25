@@ -360,6 +360,7 @@
       const [editingFeedback, setEditingFeedback] = useState(null);
       const [editingAction, setEditingAction] = useState(null);
       const [showPresence, setShowPresence] = useState(false);
+      const [showUserMenu, setShowUserMenu] = useState(false);
       const feedbackInputRef = useRef(null);
 
       if (authLoading || (isAuthed && !cfgLoaded)) {
@@ -491,19 +492,19 @@
         <div style={{ minHeight: "100vh", zoom: 1.15 }}>
           {/* HEADER with background image */}
           <div style={{
-            position: "relative", overflow: "hidden",
+            position: "relative",
             padding: "32px 32px", display: "flex", alignItems: "center",
             justifyContent: "space-between", flexWrap: "wrap", gap: 12, minHeight: 110,
           }}>
             {/* Background image */}
             <div style={{
-              position: "absolute", inset: 0,
+              position: "absolute", inset: 0, overflow: "hidden",
               backgroundImage: IMG_HEADER,
               backgroundSize: "cover", backgroundPosition: "85% 85%", opacity: 0.45,
             }} />
             {/* Gradient overlay */}
             <div style={{
-              position: "absolute", inset: 0,
+              position: "absolute", inset: 0, overflow: "hidden",
               background: "linear-gradient(135deg, rgba(28,10,10,0.85) 0%, rgba(59,15,15,0.80) 40%, rgba(120,30,20,0.45) 100%)",
             }} />
 
@@ -518,25 +519,20 @@
 			</div>
 			  
             <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-              {/* User badge with photo */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)", borderRadius: 8, padding: "5px 12px 5px 5px" }}>
-                {user.photoURL && <img src={user.photoURL} style={{ width: 24, height: 24, borderRadius: "50%" }} referrerPolicy="no-referrer" />}
-                <span style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}>{userName}</span>
-              </div>
               {/* Sync */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.12)", borderRadius: 8, padding: "5px 12px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.12)", borderRadius: 8, padding: "0 12px", height: 34 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: syncColors[overallStatus],
                   animation: overallStatus === "saving" || overallStatus === "connecting" ? "pulse 1s infinite" : "none" }} />
                 <span style={{ fontSize: 11, color: "#fff", opacity: 0.85 }}>{syncLabels[overallStatus]}</span>
               </div>
               {/* Participants connectés */}
               <div style={{ position: "relative" }}>
-                <button onClick={() => setShowPresence(!showPresence)} style={{
+                <button onClick={() => { setShowPresence(!showPresence); setShowUserMenu(false); }} style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
-                  border: "1.2px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "5px 12px",
-                  cursor: "pointer", color: "#fff", fontFamily: "inherit",
+                  border: "1.2px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "0 12px",
+                  cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
-                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/reu.png" style={{ width: 24, height: 24, objectFit: "contain" }} />
+                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/reu.png" style={{ width: 20, height: 20, objectFit: "contain" }} />
                   <span style={{ fontSize: 12, fontWeight: 600 }}>{connectedUsers.length}</span>
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showPresence ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
@@ -568,17 +564,46 @@
                 )}
               </div>
               <button onClick={exportMarkdown} className="no-print" style={{
-                background: "rgba(255,255,255,0.15)", border: "1.2px solid rgba(255,255,255,0.55)",
-                borderRadius: 8, padding: "5px 12px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer",
-              }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/fusee.gif" style={{ width: 20, height: 20, objectFit: "contain" }} /> Markdown</button>
+                display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)", border: "1.2px solid rgba(255,255,255,0.55)",
+                borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
+              }}>⬇ Markdown</button>
               <button onClick={resetAll} className="no-print" style={{
-                background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
-                borderRadius: 8, padding: "5px 12px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7,
+                display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
+                borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7, fontFamily: "inherit",
               }}>🔄 Reset</button>
-              <button onClick={signOut} className="no-print" style={{
-                background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
-                borderRadius: 8, padding: "5px 12px", color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7,
-              }}>Déconnexion</button>
+              {/* Profil utilisateur avec dropdown */}
+              <div style={{ position: "relative" }}>
+                <button onClick={() => { setShowUserMenu(!showUserMenu); setShowPresence(false); }} style={{
+                  display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)",
+                  border: "none", borderRadius: 8, padding: "0 12px 0 5px",
+                  cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
+                }}>
+                  {user.photoURL && <img src={user.photoURL} style={{ width: 24, height: 24, borderRadius: "50%" }} referrerPolicy="no-referrer" />}
+                  <span style={{ fontSize: 12, fontWeight: 500 }}>{userName}</span>
+                  <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showUserMenu ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
+                </button>
+                {showUserMenu && (
+                  <div style={{
+                    position: "absolute", top: "calc(100% + 6px)", right: 0, minWidth: 180,
+                    background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
+                    borderRadius: 10, padding: "6px 0", zIndex: 100,
+                    backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+                  }}>
+                    <div style={{ padding: "6px 14px 8px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                      <div style={{ fontSize: 12, color: "#fff", fontWeight: 600 }}>{user.displayName}</div>
+                      <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.45)", marginTop: 2 }}>{user.email}</div>
+                    </div>
+                    <button onClick={signOut} style={{
+                      display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 14px",
+                      background: "none", border: "none", cursor: "pointer", color: "#EF4444",
+                      fontSize: 12, fontWeight: 500, fontFamily: "inherit", textAlign: "left",
+                    }}
+                      onMouseEnter={e => e.target.style.background = "rgba(255,255,255,0.06)"}
+                      onMouseLeave={e => e.target.style.background = "none"}
+                    >🚪 Se déconnecter</button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
