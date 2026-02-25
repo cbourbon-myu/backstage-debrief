@@ -672,7 +672,7 @@
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Fichier .md en local</div>
                       </div>
                     </button>
-                    <button onClick={() => { exportToConfluence(); setShowIntegration(false); }} disabled={confluenceStatus === "loading"} style={{
+                    <button onClick={() => { exportToConfluence(); }} disabled={confluenceStatus === "loading"} style={{
                       display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
                       background: "none", border: "none", cursor: confluenceStatus === "loading" ? "wait" : "pointer",
                       color: "#fff", fontSize: 12, fontWeight: 500, fontFamily: "inherit", textAlign: "left",
