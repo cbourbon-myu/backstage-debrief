@@ -231,7 +231,7 @@
     function LoginScreen({ onSignIn, error, loading }) {
       return (
         <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: "56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
+          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: "36px 56px 56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <img src="assets/Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
             <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Rétro Sprint — MyUnisoft GI</div>
@@ -249,7 +249,7 @@
               {loading ? "Connexion…" : "Se connecter avec Google"}
             </button>
 			  <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 16, fontStyle: "italic" }}>Réservé à l'équipe MyUnisoft GI</div>
-            {error && <div style={{ marginTop: 32, fontSize: 13, color: "#EF4444", background: "#FEF2F2", borderRadius: 8, padding: "8px 12px" }}>{error}</div>}
+            {error && <div style={{ marginTop: 36, fontSize: 13, color: "#EF4444", background: "#FEF2F2", borderRadius: 8, padding: "8px 12px" }}>{error}</div>}
           </div>
         </div>
       );
