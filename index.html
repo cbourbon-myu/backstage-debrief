@@ -673,6 +673,7 @@
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Fichier .md en local</div>
                       </div>
                     </button>
+                    {!confluenceUrl && (
                     <button onClick={() => { exportToConfluence(); }} disabled={confluenceStatus === "loading" || confluenceStatus === "success"} style={{
                       display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
                       background: "none", border: "none", cursor: (confluenceStatus === "loading" || confluenceStatus === "success") ? "default" : "pointer",
@@ -690,6 +691,7 @@
                         </div>
                       </div>
                     </button>
+                    )}
                     {confluenceUrl && (
                       <a href={confluenceUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{
                         display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "6px 14px",
