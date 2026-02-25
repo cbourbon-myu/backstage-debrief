@@ -361,6 +361,9 @@
       const [editingAction, setEditingAction] = useState(null);
       const [showPresence, setShowPresence] = useState(false);
       const [showUserMenu, setShowUserMenu] = useState(false);
+      const [showIntegration, setShowIntegration] = useState(false);
+      const [confluenceStatus, setConfluenceStatus] = useState(null);
+      const [confluenceUrl, setConfluenceUrl] = useState(null);
       const feedbackInputRef = useRef(null);
 
       if (authLoading || (isAuthed && !cfgLoaded)) {
@@ -405,7 +408,9 @@
         act.pushItem({ id: Date.now(), description: actionDesc.trim(), responsable: actionResp.trim(), done: false, authorUid: user.uid });
         setActionDesc(""); setActionResp("");
       };
-      const exportMarkdown = () => {
+      const CONFLUENCE_FUNCTION_URL = "https://clinquant-strudel-f17230.netlify.app/.netlify/functions/export-confluence";
+
+      const generateMarkdown = () => {
         const dateLabel = sprintDateKey || new Date().toISOString().split("T")[0];
         const rock = feedbacks.filter(f => f.category === "rock");
         const fausse = feedbacks.filter(f => f.category === "fausse");
@@ -420,7 +425,6 @@
         lines.push(`# 🎸 Rétro Sprint — ${dateLabel}`);
         lines.push(`> Exporté le ${new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}`);
         lines.push("");
-
         lines.push("## 🎚️ Ressenti du Sprint");
         lines.push("");
         lines.push("| Thème | Moyenne | Votes |");
@@ -428,25 +432,21 @@
         lines.push(`| 🤘 Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
         lines.push(`| 💼 Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
         lines.push("");
-
         lines.push("## 🎸 Ce qui a rocké");
         lines.push("");
         if (rock.length) rock.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
         else lines.push("*Aucun retour*");
         lines.push("");
-
         lines.push("## 🔇 Les fausses notes");
         lines.push("");
         if (fausse.length) fausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
         else lines.push("*Aucun retour*");
         lines.push("");
-
         lines.push("## 💫 À améliorer");
         lines.push("");
         if (ameliorer.length) ameliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
         else lines.push("*Aucun retour*");
         lines.push("");
-
         if (actions.length) {
           lines.push("## 🎯 Actions décidées");
           lines.push("");
@@ -455,7 +455,6 @@
           actions.forEach(a => lines.push(`| ${a.description} | ${a.responsable || "—"} | ${a.done ? "✅ Fait" : "⏳ À faire"} |`));
           lines.push("");
         }
-
         lines.push("## 🎼 ROTI");
         lines.push("");
         lines.push(`**Moyenne : ${avg(rotiVotes)} / 5**`);
@@ -464,13 +463,40 @@
           rotiVotes.forEach(v => lines.push(`- ${v.author} : ${LABELS[v.score] || v.score}`));
         }
         lines.push("");
+        return lines.join("\n");
+      };
 
-        const md = lines.join("\n");
+      const exportMarkdown = () => {
+        const md = generateMarkdown();
         const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a"); a.href = url;
         a.download = `retro-${sprintDateKey}.md`; a.click();
         URL.revokeObjectURL(url);
+      };
+
+      const exportToConfluence = async () => {
+        if (confluenceStatus === "loading") return;
+        setConfluenceStatus("loading");
+        setConfluenceUrl(null);
+        try {
+          const md = generateMarkdown();
+          const response = await fetch(CONFLUENCE_FUNCTION_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ markdown: md, sprintDate: sprintDateKey, userEmail: user.email }),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Erreur " + response.status);
+          setConfluenceStatus("success");
+          setConfluenceUrl(result.pageUrl);
+          setTimeout(() => { setConfluenceStatus(null); }, 8000);
+        } catch (error) {
+          console.error("Confluence export error:", error);
+          setConfluenceStatus("error");
+          alert(error.message.includes("existe déjà") ? "Une page existe déjà pour ce sprint !" : "Erreur : " + error.message);
+          setTimeout(() => { setConfluenceStatus(null); }, 4000);
+        }
       };
       const resetAll = async () => {
         if (!confirm("⚠️ Remettre à zéro tous les feedbacks, actions et votes ?")) return;
@@ -529,7 +555,7 @@
               </div>
               {/* Participants connectés */}
               <div style={{ position: "relative" }}>
-                <button onClick={() => { setShowPresence(!showPresence); setShowUserMenu(false); }} style={{
+                <button onClick={() => { setShowPresence(!showPresence); setShowUserMenu(false); setShowIntegration(false); }} style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
                   border: "1.2px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "0 12px",
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
@@ -565,10 +591,73 @@
                   </div>
                 )}
               </div>
-              <button onClick={exportMarkdown} className="no-print" style={{
-                display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)", border: "1.2px solid rgba(255,255,255,0.55)",
-                borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
-              }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} /> Markdown</button>
+              {/* Dropdown Intégration */}
+              <div style={{ position: "relative" }}>
+                <button onClick={() => { setShowIntegration(!showIntegration); setShowPresence(false); setShowUserMenu(false); }} className="no-print" style={{
+                  display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
+                  border: "1.2px solid rgba(255,255,255,0.55)", borderRadius: 8, padding: "0 12px",
+                  cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
+                }}>
+                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} />
+                  <span style={{ fontSize: 12, fontWeight: 500 }}>Intégration</span>
+                  <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showIntegration ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
+                </button>
+                {showIntegration && (
+                  <div style={{
+                    position: "absolute", top: "calc(100% + 6px)", right: 0, minWidth: 220,
+                    background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
+                    borderRadius: 10, padding: "6px 0", zIndex: 100,
+                    backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+                  }}>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 600, padding: "4px 14px 8px", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                      Exporter la rétro
+                    </div>
+                    <button onClick={() => { exportMarkdown(); setShowIntegration(false); }} style={{
+                      display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
+                      background: "none", border: "none", cursor: "pointer", color: "#fff",
+                      fontSize: 12, fontWeight: 500, fontFamily: "inherit", textAlign: "left",
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "none"}
+                    >
+                      <span style={{ fontSize: 16 }}>📝</span>
+                      <div>
+                        <div>Télécharger Markdown</div>
+                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Fichier .md en local</div>
+                      </div>
+                    </button>
+                    <button onClick={() => { exportToConfluence(); setShowIntegration(false); }} disabled={confluenceStatus === "loading"} style={{
+                      display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
+                      background: "none", border: "none", cursor: confluenceStatus === "loading" ? "wait" : "pointer",
+                      color: "#fff", fontSize: 12, fontWeight: 500, fontFamily: "inherit", textAlign: "left",
+                      opacity: confluenceStatus === "loading" ? 0.5 : 1,
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "none"}
+                    >
+                      <span style={{ fontSize: 16 }}>{confluenceStatus === "loading" ? "⏳" : confluenceStatus === "success" ? "✅" : "📄"}</span>
+                      <div>
+                        <div>{confluenceStatus === "loading" ? "Export en cours…" : confluenceStatus === "success" ? "Page créée !" : "Publier sur Confluence"}</div>
+                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>
+                          {confluenceStatus === "success" ? "GI › Sprint Retrospectives" : "Créer une page dans GI"}
+                        </div>
+                      </div>
+                    </button>
+                    {confluenceUrl && (
+                      <a href={confluenceUrl} target="_blank" rel="noopener" style={{
+                        display: "flex", alignItems: "center", gap: 10, padding: "6px 14px",
+                        fontSize: 11, color: "#FDE047", textDecoration: "none", fontWeight: 500,
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+                        onMouseLeave={e => e.currentTarget.style.background = "none"}
+                      >
+                        <span style={{ fontSize: 16 }}>🔗</span>
+                        Voir la page Confluence →
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
               <button onClick={resetAll} className="no-print" style={{
                 display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
                 borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7, fontFamily: "inherit",
@@ -576,7 +665,7 @@
 			  <span style={{ fontSize: 18 }}>🔄</span> Reset</button>
               {/* Profil utilisateur avec dropdown */}
               <div style={{ position: "relative" }}>
-                <button onClick={() => { setShowUserMenu(!showUserMenu); setShowPresence(false); }} style={{
+                <button onClick={() => { setShowUserMenu(!showUserMenu); setShowPresence(false); setShowIntegration(false); }} style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)",
                   border: "none", borderRadius: 8, padding: "0 12px 0 5px",
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
