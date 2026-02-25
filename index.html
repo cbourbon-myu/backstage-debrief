@@ -240,7 +240,7 @@
               background: "#FEF5EC", color: "#1F2937", fontSize: 15, fontWeight: 600,
               cursor: loading ? "wait" : "pointer", display: "flex", alignItems: "center",
               justifyContent: "center", gap: 10, transition: "all 0.2s",
-			  margin: "30px auto 0",
+			  margin: "28px auto 0",
             }}
               onMouseEnter={e => { if(!loading) e.currentTarget.style.background = "#F9FAFB"; }}
               onMouseLeave={e => e.currentTarget.style.background = "#FEF5EC"}
@@ -249,7 +249,7 @@
               {loading ? "Connexion…" : "Se connecter avec Google"}
             </button>
 			  <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 16, fontStyle: "italic" }}>Réservé à l'équipe MyUnisoft GI</div>
-            {error && <div style={{ marginTop: 52, fontSize: 13, color: "#EF4444", background: "#FEF2F2", borderRadius: 8, padding: "8px 12px" }}>{error}</div>}
+            {error && <div style={{ marginTop: 48, fontSize: 13, color: "#EF4444", background: "#FEF2F2", borderRadius: 8, padding: "8px 12px" }}>{error}</div>}
           </div>
         </div>
       );
