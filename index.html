@@ -14,7 +14,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: #FEF7ED; }
+    body { font-family: 'DM Sans', sans-serif; background: #F8EBDB; }
     input:focus { outline: none; }
     button { font-family: inherit; }
     @media print { .no-print { display: none !important; } body { background: #fff; } }
@@ -211,7 +211,7 @@
     function SprintDateScreen({ onSave }) {
       const [date, setDate] = React.useState(new Date().toISOString().split("T")[0]);
       return (
-        <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ background: "#fff", borderRadius: 24, padding: "48px 40px", maxWidth: 440, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>🥁</div>
             <div style={{ fontSize: 22, fontWeight: 800, color: "#1F2937", marginBottom: 8 }}>Nouveau Sprint !</div>
@@ -229,7 +229,7 @@
     }
     function LoginScreen({ onSignIn, error, loading }) {
       return (
-        <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ background: "#fff", borderRadius: 24, padding: "56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <img src="assets/Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
             <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
@@ -422,7 +422,7 @@
 
       if (authLoading || (isAuthed && !cfgLoaded)) {
         return (
-          <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ fontSize: 48 }}>🥁</div>
           </div>
         );
@@ -438,7 +438,7 @@
 
       if (!sprintDateKey) {
         return (
-          <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ textAlign: "center", color: "#6B7280", fontSize: 15 }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
               En attente de la configuration du sprint par l'animateur…
@@ -1010,10 +1010,11 @@
                 {CATEGORIES.map(cat => (
                   <button key={cat.id} onClick={() => setSelectedCat(cat.id)} style={{
                     padding: "5px 15px", borderRadius: 16, fontSize: 12.5, cursor: "pointer",
-                    fontWeight: selectedCat === cat.id ? 600 : 500, transition: "all 0.2s",
-                    border: selectedCat === cat.id ? "none" : "1.5px solid " + cat.border,
-                    background: selectedCat === cat.id ? cat.color : "transparent",
-                    color: selectedCat === cat.id ? "#fff" : cat.color,
+                    fontWeight: selectedCat === cat.id ? 700 : 500, transition: "all 0.2s",
+                    border: selectedCat === cat.id ? "2px solid " + cat.color : "1.5px solid " + cat.border,
+                    background: cat.border,
+                    color: "#fff",
+                    opacity: selectedCat === cat.id ? 1 : 0.55,
                   }}>{cat.label}</button>
                 ))}
               </div>
