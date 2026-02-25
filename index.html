@@ -292,9 +292,9 @@
       const ratingsRaw = rat.data;
 
       const RATING_CATEGORIES = [
-        { id: "ambiance", label: "🎵 Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
-        { id: "satisfaction", label: "💼 Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
-        { id: "roti", label: "🎸 ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" },
+        { id: "ambiance", label: "Ambiance du Sprint", color: "#7C3AED", bg: "#F5F3FF", border: "#A78BFA" },
+        { id: "satisfaction", label: "Satisfaction Travail", color: "#059669", bg: "#ECFDF5", border: "#10B981" },
+        { id: "roti", label: "ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" },
       ];
       const RATING_LABELS = {
         1: { emoji: "💀", label: "Silence de mort" },
@@ -977,7 +977,7 @@
                 Le ressenti de la Rétro
               </div>
               {(() => {
-                const cat = { id: "roti", label: "🎸 ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" };
+                const cat = { id: "roti", label: "ROTI", color: "#D97706", bg: "#FFFBEB", border: "#F59E0B" };
                 const myRating = getMyRating(cat.id);
                 const myScore = myRating?.score;
                 const avg = getAvg(cat.id);
@@ -1085,7 +1085,7 @@
                           ) : (
                             <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 13, color: "rgba(255,255,255,0.9)", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
                           )}
-                          {action.responsable && <div style={{ fontSize: 11, color: "#F97316", marginTop: 1, fontWeight: 500 }}>👤 {action.responsable}</div>}
+                          {action.responsable && <div style={{ fontSize: 11, color: "#F97316", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/reu.png" style={{ width: 14, height: 14, objectFit: "contain" }} /> {action.responsable}</div>}
                         </div>
                         <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "rgba(255,255,255,0.35)", display: action.authorUid === user?.uid ? "block" : "none" }}
                           onMouseEnter={e => e.target.style.color = "#EF4444"} onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.35)"}>✕</button>
