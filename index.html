@@ -236,7 +236,7 @@
             <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Rétro Sprint — MyUnisoft GI</div>
             <button onClick={onSignIn} disabled={loading} style={{
-              padding: "14px 40px", borderRadius: 12, border: "1px solid #E8C9A8",
+              padding: "14px 40px", borderRadius: 12, border: "2px solid #E8C9A8",
               background: "#FEF5EC", color: "#1F2937", fontSize: 15, fontWeight: 600,
               cursor: loading ? "wait" : "pointer", display: "flex", alignItems: "center",
               justifyContent: "center", gap: 10, transition: "all 0.2s",
@@ -249,7 +249,7 @@
               {loading ? "Connexion…" : "Se connecter avec Google"}
             </button>
 			  <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 16, fontStyle: "italic" }}>Réservé à l'équipe MyUnisoft GI</div>
-            {error && <div style={{ marginTop: 48, fontSize: 13, color: "#EF4444", background: "#FEF2F2", borderRadius: 8, padding: "8px 12px" }}>{error}</div>}
+            {error && <div style={{ marginTop: 30, fontSize: 13, color: "#EF4444", background: "#FEF2F2", borderRadius: 8, padding: "8px 8px" }}>{error}</div>}
           </div>
         </div>
       );
