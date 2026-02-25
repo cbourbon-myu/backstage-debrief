@@ -690,17 +690,17 @@
                       </div>
                     </button>
                     {confluenceUrl && (
-                      <a href={confluenceUrl} target="_blank" rel="noopener" onClick={e => e.stopPropagation()} style={{
-                        display: "flex", alignItems: "center", gap: 10, padding: "6px 14px",
-                        fontSize: 11, color: "#FDE047", textDecoration: "none", fontWeight: 500,
-                        cursor: "pointer", position: "relative", zIndex: 10,
+                      <button onClick={(e) => { e.stopPropagation(); window.open(confluenceUrl, "_blank"); }} style={{
+                        display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "6px 14px",
+                        fontSize: 11, color: "#FDE047", fontWeight: 500, background: "none", border: "none",
+                        cursor: "pointer", fontFamily: "inherit", textAlign: "left",
                       }}
                         onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
                         onMouseLeave={e => e.currentTarget.style.background = "none"}
                       >
                         <span style={{ fontSize: 16 }}>🔗</span>
                         Voir la page Confluence →
-                      </a>
+                      </button>
                     )}
                   </div>
                 )}
