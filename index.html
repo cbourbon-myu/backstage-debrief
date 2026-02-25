@@ -292,11 +292,6 @@
       const actions = act.data;
       const ratingsRaw = rat.data;
 
-      const RATING_CATEGORIES = [
-        { id: "ambiance", label: "Ambiance du Sprint", color: "#9F1239", bg: "#FFF1F2", border: "#E11D48" },
-        { id: "satisfaction", label: "Satisfaction Travail", color: "#92400E", bg: "#FEF9C3", border: "#CA8A04" },
-        { id: "roti", label: "ROTI", color: "#C2410C", bg: "#FFF7ED", border: "#EA580C" },
-      ];
       const RATING_LABELS = {
         1: { emoji: "💀", label: "Silence de mort" },
         2: { emoji: "🎵", label: "Fausse note" },
@@ -567,7 +562,6 @@
       const getFeedbacksByCategory = (catId) => feedbacks.filter(f => f.category === catId);
 
       const syncColors = { synced: "#10B981", saving: "#F59E0B", connecting: "#60A5FA", error: "#EF4444" };
-      const syncLabels = { synced: "🎥 En direct", saving: "Enregistrement…", connecting: "Connexion…", error: "Erreur" };
 
       return (
         <div style={{ minHeight: "100vh", zoom: 1.15 }}>
@@ -767,8 +761,6 @@
 
             {/* RIDEAU PLEIN ÉCRAN */}
             <ConcertCurtain visible={!!activeCurtain} catLabel={activeCurtain ? RATING_CAT_LABELS[activeCurtain] : ""} />
-
-            {/* LIVE BANNER — déplacé dans le header */}
 
             {/* RÈGLES DU PIT */}
             <div style={{
