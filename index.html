@@ -401,6 +401,19 @@
       const [showPresence, setShowPresence] = useState(false);
       const [showUserMenu, setShowUserMenu] = useState(false);
       const [showIntegration, setShowIntegration] = useState(false);
+
+      // Fermer les dropdowns au clic en dehors
+      useEffect(() => {
+        const handleClickOutside = (e) => {
+          if (!e.target.closest("[data-dropdown]")) {
+            setShowPresence(false);
+            setShowUserMenu(false);
+            setShowIntegration(false);
+          }
+        };
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+      }, []);
       const [zoomedImage, setZoomedImage] = useState(null);
       const [showPitTooltip, setShowPitTooltip] = useState(false);
       const [confluenceStatus, setConfluenceStatus] = useState(null);
@@ -592,7 +605,7 @@
                 <span style={{ fontSize: 12, color: "#fff", opacity: 0.85 }}>{{synced: "En direct", saving: "Enregistrement…", connecting: "Connexion…", error: "Erreur"}[overallStatus]}</span>
               </div>
               {/* Participants connectés */}
-              <div style={{ position: "relative" }}>
+              <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowPresence(!showPresence); setShowUserMenu(false); setShowIntegration(false); }} style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
                   border: "1.2px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "0 12px",
@@ -630,7 +643,7 @@
                 )}
               </div>
               {/* Dropdown Intégration */}
-              <div style={{ position: "relative" }}>
+              <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowIntegration(!showIntegration); setShowPresence(false); setShowUserMenu(false); }} className="no-print" style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
                   border: "1.2px solid rgba(255,255,255,0.55)", borderRadius: 8, padding: "0 12px",
@@ -702,7 +715,7 @@
               }}>
 			  <span style={{ fontSize: 18 }}>🔄</span> Reset</button>
               {/* Profil utilisateur avec dropdown */}
-              <div style={{ position: "relative" }}>
+              <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowUserMenu(!showUserMenu); setShowPresence(false); setShowIntegration(false); }} style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)",
                   border: "none", borderRadius: 8, padding: "0 12px 0 5px",
