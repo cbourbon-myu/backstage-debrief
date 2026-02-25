@@ -590,7 +590,7 @@
 
           <div style={{ position: "relative", zIndex: 1 }}>
   			<div style={{ fontSize: 34, fontWeight: 800, color: "#F97316", letterSpacing: 2.5, display: "flex", alignItems: "center" }}>
-  			  <img src="assets/Batterie.png" style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginRight: 12 }} />
+  			  <img src="assets/Batterie.png" onClick={() => setZoomedImage("assets/Batterie.png")} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginRight: 12, cursor: "pointer" }} />
   			  BACKSTAGE DEBRIEF
  			 </div>
 			</div>
@@ -642,7 +642,7 @@
                   </div>
                 )}
               </div>
-              {/* Dropdown Intégration */}
+              {/* Dropdown Intégrations */}
               <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowIntegration(!showIntegration); setShowPresence(false); setShowUserMenu(false); }} className="no-print" style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
@@ -650,7 +650,7 @@
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
                   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} />
-                  <span style={{ fontSize: 12, fontWeight: 500 }}>Intégration</span>
+                  <span style={{ fontSize: 12, fontWeight: 500 }}>Intégrations</span>
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showIntegration ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
                 {showIntegration && (
@@ -671,7 +671,7 @@
                       onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
                       onMouseLeave={e => e.currentTarget.style.background = "none"}
                     >
-                      <span style={{ fontSize: 16 }}>📝</span>
+                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/markdown.png" style={{ width: 20, height: 20, objectFit: "contain" }} />
                       <div>
                         <div>Télécharger Markdown</div>
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>Fichier .md en local</div>
@@ -686,7 +686,7 @@
                       onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
                       onMouseLeave={e => e.currentTarget.style.background = "none"}
                     >
-                      <span style={{ fontSize: 16 }}>{confluenceStatus === "loading" ? "⏳" : confluenceStatus === "success" ? "✅" : "📄"}</span>
+                      {confluenceStatus === "loading" ? <span style={{ fontSize: 16 }}>⏳</span> : confluenceStatus === "success" ? <span style={{ fontSize: 16 }}>✅</span> : <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/confluence.png" style={{ width: 20, height: 20, objectFit: "contain" }} />}
                       <div>
                         <div>{confluenceStatus === "loading" ? "Export en cours…" : confluenceStatus === "success" ? "Page créée !" : "Publier sur Confluence"}</div>
                         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>
