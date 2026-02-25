@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Backstage Debrief — Rétrospective Sprint</title>
-  <link rel="icon" type="image/png" href= "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/Batterie.png?v=2"/>
+  <link rel="icon" type="image/png" href= "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/Batterie.png?v=2"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -23,9 +23,9 @@
 <body>
   <div id="root"></div>
   <script>
-    window.__IMG_HEADER__ = 'url("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/titre.jpg")';
-	window.__IMG_RULES__ = 'url("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/neon.jpg")';
-    window.__IMG_ACTIONS__ = 'url("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/concert.jpg")';
+    window.__IMG_HEADER__ = 'url("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/titre.jpg")';
+	window.__IMG_RULES__ = 'url("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/neon.jpg")';
+    window.__IMG_ACTIONS__ = 'url("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/concert.jpg")';
 
     const firebaseConfig = {
       apiKey: "AIzaSyBPH2KoTL5kYXT5c7obYidciDuElmr2C7Y",
@@ -231,7 +231,7 @@
       return (
         <div style={{ minHeight: "100vh", background: "#FEF7ED", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ background: "#fff", borderRadius: 24, padding: "56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
-            <img src="Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
+            <img src="assets/Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
             <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Rétro Sprint — MyUnisoft GI</div>
             <button onClick={onSignIn} disabled={loading} style={{
@@ -577,7 +577,7 @@
 
           <div style={{ position: "relative", zIndex: 1 }}>
   			<div style={{ fontSize: 34, fontWeight: 800, color: "#F97316", letterSpacing: 2.5, display: "flex", alignItems: "center" }}>
-  			  <img src="Batterie.png" style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginRight: 12 }} />
+  			  <img src="assets/Batterie.png" style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginRight: 12 }} />
   			  BACKSTAGE DEBRIEF
  			 </div>
 			</div>
@@ -598,7 +598,7 @@
                   border: "1.2px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "0 12px",
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
-                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/reu.png" style={{ width: 32, height: 32, objectFit: "contain" }} />
+                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/reu.png" style={{ width: 32, height: 32, objectFit: "contain" }} />
                   <span style={{ fontSize: 12, fontWeight: 600 }}>{connectedUsers.length}</span>
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showPresence ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
@@ -636,7 +636,7 @@
                   border: "1.2px solid rgba(255,255,255,0.55)", borderRadius: 8, padding: "0 12px",
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
-                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} />
+                  <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} />
                   <span style={{ fontSize: 12, fontWeight: 500 }}>Intégration</span>
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showIntegration ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
@@ -730,7 +730,7 @@
                     }}
                       onMouseEnter={e => e.target.style.background = "rgba(255,255,255,0.06)"}
                       onMouseLeave={e => e.target.style.background = "none"}
-                    ><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/logout.png" style={{ width: 16, height: 16, objectFit: "contain" }} /> Se déconnecter</button>
+                    ><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/logout.png" style={{ width: 16, height: 16, objectFit: "contain" }} /> Se déconnecter</button>
                   </div>
                 )}
               </div>
@@ -787,7 +787,7 @@
                           {/* Image Fight Club en fond */}
                           <div style={{
                             position: "absolute", inset: 0,
-                            backgroundImage: "url('https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/GIClub.png')",
+                            backgroundImage: "url('https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/GIClub.png')",
                             backgroundSize: "cover", backgroundPosition: "center",
                             opacity: 0.15,
                           }} />
@@ -887,9 +887,9 @@
                     <div key={cat.id} style={{ background: "#fff", borderRadius: 14, border: "2px solid " + cat.border, padding: "16px 14px", textAlign: "center" }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                       {cat.id === "ambiance" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
                       ) : null}
                       {cat.label}
                     </div>
@@ -1044,7 +1044,7 @@
                 return (
                   <div style={{ background: "#fff", borderRadius: 14, border: "2px solid " + cat.border, padding: "20px 20px", textAlign: "center", maxWidth: 400 }}>
                     <div style={{ fontSize: 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
-                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
+                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
                       <span>ROTI</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12, marginTop: 12 }}>
@@ -1146,7 +1146,7 @@
                           ) : (
                             <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 13, color: "rgba(255,255,255,0.9)", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
                           )}
-                          {action.responsable && <div style={{ fontSize: 11, color: "#F97316", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/reu.png" style={{ width: 14, height: 14, objectFit: "contain" }} /> {action.responsable}</div>}
+                          {action.responsable && <div style={{ fontSize: 11, color: "#F97316", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/reu.png" style={{ width: 14, height: 14, objectFit: "contain" }} /> {action.responsable}</div>}
                         </div>
                         <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "rgba(255,255,255,0.35)", display: action.authorUid === user?.uid ? "block" : "none" }}
                           onMouseEnter={e => e.target.style.color = "#EF4444"} onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.35)"}>✕</button>
