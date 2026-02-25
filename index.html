@@ -462,15 +462,15 @@
         const LABELS = { 1: "💀 Silence de mort", 2: "🎵 Petite étincelle", 3: "🎸 En rodage", 4: "🤘 Ça groove !", 5: "⭐ Épique !" };
 
         const lines = [];
-        lines.push(`# 🎸 Rétro Sprint — ${dateLabel}`);
+        lines.push(`# Rétro Sprint — ${dateLabel}`);
         lines.push(`> Exporté le ${new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}`);
         lines.push("");
-        lines.push("## 🎚️ Ressenti du Sprint");
+        lines.push("## Ressenti du Sprint");
         lines.push("");
         lines.push("| Thème | Moyenne | Votes |");
         lines.push("|---|---|---|");
-        lines.push(`| 🤘 Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
-        lines.push(`| 💼 Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push(`| Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push(`| Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
         lines.push("");
         lines.push("## 🎸 Ce qui a rocké");
         lines.push("");
@@ -495,7 +495,7 @@
           actions.forEach(a => lines.push(`| ${a.description} | ${a.responsable || "—"} | ${a.done ? "✅ Fait" : "⏳ À faire"} |`));
           lines.push("");
         }
-        lines.push("## 🎼 ROTI");
+        lines.push("## ROTI");
         lines.push("");
         lines.push(`**Moyenne : ${avg(rotiVotes)} / 5**`);
         if (rotiVotes.length) {
@@ -849,14 +849,15 @@
                       )}
                       {!showResults[cat.id] && (
                         <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 4, borderTop: "1px solid " + cat.border + "33", paddingTop: 8 }}>
-                          {connectedUids.length > 0 ? (
-                            <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
+                          {myScore ? (
+                            connectedUids.length > 0 ? (
+                              <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
+                            ) : null
                           ) : (
                             <>Choisis ton emoji pour voter 👆</>
                           )}
                         </div>
                       )}
-                      {/* RÉSULTATS */}
                       <div style={{ position: "relative", marginTop: 6 }}>
                         {showResults[cat.id] && (
                           <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
@@ -981,7 +982,7 @@
                 return (
                   <div style={{ background: "#fff", borderRadius: 14, border: "2px solid " + cat.border, padding: "20px 20px", textAlign: "center", maxWidth: 400 }}>
                     <div style={{ fontSize: 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
-                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png")} style={{ width: 70, height: 70, objectFit: "contain", display: "block", cursor: "pointer" }} />
+                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/ROTI.png")} style={{ width: 40, height: 40, objectFit: "contain", display: "block", cursor: "pointer" }} />
                       <span>ROTI</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12, marginTop: 12 }}>
@@ -1002,8 +1003,10 @@
                     )}
                     {!showResults[cat.id] && (
                       <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 4, borderTop: "1px solid " + cat.border + "33", paddingTop: 8 }}>
-                        {connectedUids.length > 0 ? (
-                          <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
+                        {myScore ? (
+                          connectedUids.length > 0 ? (
+                            <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
+                          ) : null
                         ) : (
                           <>Choisis ton emoji pour voter 👆</>
                         )}
