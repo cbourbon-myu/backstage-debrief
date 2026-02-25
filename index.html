@@ -359,6 +359,7 @@
       const [actionResp, setActionResp] = useState("");
       const [editingFeedback, setEditingFeedback] = useState(null);
       const [editingAction, setEditingAction] = useState(null);
+      const [showPresence, setShowPresence] = useState(false);
       const feedbackInputRef = useRef(null);
 
       if (authLoading || (isAuthed && !cfgLoaded)) {
@@ -527,6 +528,44 @@
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: syncColors[overallStatus],
                   animation: overallStatus === "saving" || overallStatus === "connecting" ? "pulse 1s infinite" : "none" }} />
                 <span style={{ fontSize: 11, color: "#fff", opacity: 0.85 }}>{syncLabels[overallStatus]}</span>
+              </div>
+              {/* Participants connectés */}
+              <div style={{ position: "relative" }}>
+                <button onClick={() => setShowPresence(!showPresence)} style={{
+                  display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.15)",
+                  border: "1.2px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "5px 12px",
+                  cursor: "pointer", color: "#fff", fontFamily: "inherit",
+                }}>
+                  <span style={{ fontSize: 14 }}>👥</span>
+                  <span style={{ fontSize: 12, fontWeight: 600 }}>{connectedUsers.length}</span>
+                  <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showPresence ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
+                </button>
+                {showPresence && (
+                  <div style={{
+                    position: "absolute", top: "calc(100% + 6px)", right: 0, minWidth: 200,
+                    background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
+                    borderRadius: 10, padding: "8px 0", zIndex: 100,
+                    backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
+                  }}>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 600, padding: "4px 14px 8px", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                      En ligne — {connectedUsers.length} participant{connectedUsers.length > 1 ? "s" : ""}
+                    </div>
+                    {connectedUsers.map(u => (
+                      <div key={u.uid} style={{
+                        display: "flex", alignItems: "center", gap: 8, padding: "6px 14px",
+                        fontSize: 12.5, color: "#fff",
+                      }}>
+                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#10B981", flexShrink: 0, boxShadow: "0 0 6px #10B981" }} />
+                        <span style={{ fontWeight: u.uid === user?.uid ? 600 : 400 }}>
+                          {u.name}{u.uid === user?.uid ? " (toi)" : ""}
+                        </span>
+                      </div>
+                    ))}
+                    {connectedUsers.length === 0 && (
+                      <div style={{ padding: "6px 14px", fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Aucun participant</div>
+                    )}
+                  </div>
+                )}
               </div>
               <button onClick={exportMarkdown} className="no-print" style={{
                 background: "rgba(255,255,255,0.15)", border: "1.2px solid rgba(255,255,255,0.55)",
@@ -852,7 +891,7 @@
 		  <div style={{
 		    position: "absolute", inset: 0,
 		    backgroundImage: IMG_ACTIONS,
-		    backgroundSize: "cover", backgroundPosition: "center center",
+		    backgroundSize: "cover", backgroundPosition: "center top",
 		    opacity: 0.45,
 		  }} />
 		  {/* Overlay dégradé unique : transparent à gauche → sombre à droite */}
