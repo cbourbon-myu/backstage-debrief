@@ -519,7 +519,12 @@
         setConfluenceStatus("loading");
         setConfluenceUrl(null);
         try {
-          const md = generateMarkdown();
+          const md = generateMarkdown()
+            .replace(/🎸 Rétro Sprint/g, "🥁 Rétro Sprint")
+            .replace(/🎚️/g, "🎙️")
+            .replace(/🎼/g, "🍖")
+            .replace(/🤘/g, "🥳")
+            .replace(/💼/g, "📊");
           const response = await fetch(CONFLUENCE_FUNCTION_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
