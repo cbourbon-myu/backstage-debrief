@@ -743,6 +743,13 @@
                 )}
               </div>
             </div>
+            {/* Info collaborative — alignée à droite */}
+            <div style={{
+              width: "100%", textAlign: "right", position: "relative", zIndex: 1,
+              fontSize: 10.5, color: "rgba(255,255,255,0.55)", marginTop: -4,
+            }}>
+              <em>Mode collaboratif temps réel</em> — Sprint du {sprintDateLabel} · Connecté en tant que {user.displayName}
+            </div>
           </div>
 
           <div style={{ maxWidth: 1400, margin: "0 auto", padding: "24px 20px 40px" }}>
@@ -750,14 +757,7 @@
             {/* RIDEAU PLEIN ÉCRAN */}
             <ConcertCurtain visible={!!activeCurtain} catLabel={activeCurtain ? RATING_CAT_LABELS[activeCurtain] : ""} />
 
-            {/* LIVE BANNER */}
-            <div style={{
-              background: "linear-gradient(135deg, #EDE9FE, #FCE7F3)", borderRadius: 12,
-              padding: "4px 18px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10, fontSize: 11, color: "#6B21A8",
-            }}>
-              <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/reu.png" style={{ width: 22, height: 22, objectFit: "contain" }} />
-              <div><strong><em>Mode collaboratif temps réel</em></strong> <em>- Sprint du {sprintDateLabel} · Connecté en tant que {user.displayName}. Tous les retours sont synchronisés instantanément.</em></div>
-            </div>
+            {/* LIVE BANNER — déplacé dans le header */}
 
             {/* RÈGLES DU PIT */}
             <div style={{
@@ -816,7 +816,7 @@
                             </div>
                             <div style={{
                               marginTop: 10, fontSize: 9, color: "rgba(255,255,255,0.25)",
-                              letterSpacing: 1.5,  fontStyle: "italic",
+                              letterSpacing: 1.5, fontStyle: "italic",
                             }}>
                               - Tyler Durden, probablement...
                             </div>
