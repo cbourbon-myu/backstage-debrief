@@ -696,7 +696,7 @@
                     backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
                   }}>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 600, padding: "4px 14px 8px", textTransform: "uppercase", letterSpacing: 0.5 }}>
-                      Partager la rétro
+                      Exporter la rétro
                     </div>
                     <button onClick={() => { exportMarkdown(); setShowIntegration(false); }} style={{
                       display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
@@ -854,8 +854,7 @@
                     {showPitTooltip && (
                       <div style={{
                         position: "absolute",
-                        bottom: isMobile ? "auto" : "calc(100% + 14px)",
-                        top: isMobile ? "calc(100% + 10px)" : "auto",
+                        top: "calc(100% + 10px)",
                         left: "50%", transform: "translateX(-50%)",
                         minWidth: isMobile ? 260 : 380, padding: 0, zIndex: 9000, animation: "tooltipFadeIn 0.3s ease",
                         borderRadius: 12, overflow: "hidden",
@@ -899,12 +898,13 @@
                             </div>
                           </div>
                         </div>
-                        {!isMobile && <div style={{
-                          position: "absolute", bottom: -8, left: "50%", transform: "translateX(-50%)",
+                        {/* Flèche vers le haut */}
+                        <div style={{
+                          position: "absolute", top: -8, left: "50%", transform: "translateX(-50%)",
                           width: 0, height: 0,
                           borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
-                          borderTop: "10px solid #1a0a0a",
-                        }} />}
+                          borderBottom: "10px solid #1a0a0a",
+                        }} />
                       </div>
                     )}
                   </span>
