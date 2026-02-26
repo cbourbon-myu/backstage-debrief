@@ -83,12 +83,12 @@
     const CATEGORIES = [
       { id: "rock", label: "🎸 A rocké", color: "#92400E", bg: "#FEF9C3", border: "#CA8A04" },
       { id: "fausse", label: "🔇 Fausse note", color: "#9F1239", bg: "#FFF1F2", border: "#E11D48" },
-      { id: "ameliorer", label: "💫 À améliorer", color: "#9A3412", bg: "#FFF7ED", border: "#F97316" },
+      { id: "ameliorer", label: "🎛️ Le soundcheck", color: "#9A3412", bg: "#FFF7ED", border: "#F97316" },
     ];
     const COLUMN_MAP = {
       rock: { title: "🎸 Ce qui a rocké", color: "#92400E", border: "#CA8A04" },
       fausse: { title: "🔇 Les fausses notes", color: "#9F1239", border: "#E11D48" },
-      ameliorer: { title: "💫 À améliorer", color: "#9A3412", border: "#F97316" },
+      ameliorer: { title: "🎛️ Le soundcheck", color: "#9A3412", border: "#F97316" },
     };
 
     // --- AUTH HOOK ---
@@ -540,7 +540,7 @@
             lines.push("");
           }
           if (pinnedAmeliorer.length) {
-            lines.push("**💫 À améliorer**");
+            lines.push("**🎛️ Le soundcheck**");
             pinnedAmeliorer.forEach(f => lines.push(`- ${f.text}`));
             lines.push("");
           }
@@ -578,7 +578,7 @@
         if (fausse.length) fausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
         else lines.push("*Aucun retour*");
         lines.push("");
-        lines.push("### 💫 À améliorer");
+        lines.push("### 🎛️ Le soundcheck");
         lines.push("");
         if (ameliorer.length) ameliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
         else lines.push("*Aucun retour*");
@@ -1385,7 +1385,7 @@
                               {[
                                 { items: pinnedRock, label: "🎸 A rocké", color: "#CA8A04", bg: "rgba(254,249,195,0.12)", border: "#CA8A0444" },
                                 { items: pinnedFausse, label: "🔇 Fausses notes", color: "#E11D48", bg: "rgba(255,241,242,0.12)", border: "#E11D4844" },
-                                { items: pinnedAmeliorer, label: "💫 À améliorer", color: "#F97316", bg: "rgba(255,247,237,0.12)", border: "#F9731644" },
+                                { items: pinnedAmeliorer, label: "🎛️ Le soundcheck", color: "#F97316", bg: "rgba(255,247,237,0.12)", border: "#F9731644" },
                               ].filter(g => g.items.length > 0).map(g => (
                                 <div key={g.label} style={{ background: g.bg, borderRadius: 10, border: "1px solid " + g.border, padding: "10px 12px" }}>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: g.color, marginBottom: 8 }}>{g.label}</div>
