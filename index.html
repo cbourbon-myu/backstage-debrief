@@ -1433,13 +1433,13 @@
                 ? { text: "Larsen en boucle, sueur au front et équipe au sommet : merci pour le chaos, on revient tout casser dans 15 jours.", emoji: "🤘🔥", gif: "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/msg2.gif" }
                 : { text: "Le rideau tombe mais l'ampli siffle encore : merci à l'équipe, on sonne d'enfer ensemble et on remet le son dans 15 jours !", emoji: "🤘🎸", gif: "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/msg1.gif" };
               return (
-                <div style={{ borderRadius: 16, position: "relative", overflow: "hidden", marginBottom: 16, minHeight: isMobile ? 100 : 120 }}>
+                <div style={{ borderRadius: 16, position: "relative", overflow: "hidden", marginBottom: 16, minHeight: isMobile ? 140 : 180 }}>
                   {/* GIF de fond flouté */}
                   <div style={{
-                    position: "absolute", inset: -10,
+                    position: "absolute", inset: -4,
                     backgroundImage: `url(${msgData.gif})`,
                     backgroundSize: "cover", backgroundPosition: "center",
-                    filter: "blur(4px)", opacity: 0.5,
+                    filter: "blur(2px)", opacity: 0.55,
                   }} />
                   {/* Overlay sombre */}
                   <div style={{
