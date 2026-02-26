@@ -696,7 +696,7 @@
                     backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
                   }}>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 600, padding: "4px 14px 8px", textTransform: "uppercase", letterSpacing: 0.5 }}>
-                      Exporter la rétro
+                      Partager la rétro
                     </div>
                     <button onClick={() => { exportMarkdown(); setShowIntegration(false); }} style={{
                       display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "8px 14px",
@@ -824,24 +824,22 @@
             }}>
               {/* Image de fond */}
               <div style={{
-                position: "absolute", inset: 0, zIndex: 0,
+                position: "absolute", inset: 0,
                 backgroundImage: IMG_RULES,
                 backgroundSize: "cover", backgroundPosition: "center",
                 opacity: 0.5,
                 borderRadius: 16,
-                overflow: "hidden",
               }} />
               {/* Overlay dégradé */}
               <div style={{
-                position: "absolute", inset: 0, zIndex: 1,
+                position: "absolute", inset: 0,
                 background: isMobile
                   ? "linear-gradient(to bottom, #FFF6EE 0%, #FFF6EE 50%, rgba(255,246,238,0.7) 70%, rgba(255,246,238,0.3) 100%)"
                   : "linear-gradient(to right, #FFF6EE 0%, #FFF6EE 40%, rgba(255,246,238,0.7) 60%, rgba(255,246,238,0.2) 80%, transparent 100%)",
                 borderRadius: 16,
-                overflow: "hidden",
               }} />
 
-              <div style={{ flex: 1, padding: isMobile ? "16px 16px 20px" : "0px 28px", zIndex: 2, position: "relative", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div style={{ flex: 1, padding: isMobile ? "16px 16px 20px" : "0px 28px", zIndex: 1, position: "relative", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, color: "#78350F", marginBottom: 6, display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
                   <span style={{ fontSize: isMobile ? 28 : 36 }}>🎼</span>
                   <span
@@ -854,28 +852,33 @@
                     {showPitTooltip && (
                       <div style={{
                         position: "absolute",
-                        top: "calc(100% + 10px)",
+                        bottom: isMobile ? "auto" : "calc(100% + 14px)",
+                        top: isMobile ? "calc(100% + 10px)" : "auto",
                         left: "50%", transform: "translateX(-50%)",
-                        minWidth: isMobile ? 260 : 380, padding: 0, zIndex: 9000, animation: "tooltipFadeIn 0.3s ease",
+                        minWidth: isMobile ? 260 : 380, padding: 0, zIndex: 200, animation: "tooltipFadeIn 0.3s ease",
                         borderRadius: 12, overflow: "hidden",
                         boxShadow: "0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)",
                       }}>
+                        {/* Fond Fight Club */}
                         <div style={{
                           background: "linear-gradient(135deg, #1a0a0a 0%, #2d1010 40%, #1a0505 100%)",
                           padding: isMobile ? "14px 16px" : "18px 22px",
                           position: "relative",
                           overflow: "hidden",
                         }}>
+                          {/* Image Fight Club en fond */}
                           <div style={{
                             position: "absolute", inset: 0,
                             backgroundImage: "url('https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/GIClub.png')",
                             backgroundSize: "cover", backgroundPosition: "center",
                             opacity: 0.15,
                           }} />
+                          {/* Barre rouge sang en haut */}
                           <div style={{
                             position: "absolute", top: 0, left: 0, right: 0, height: 6,
                             background: "linear-gradient(90deg, transparent, #DC2626, #B91C1C, transparent)",
                           }} />
+                          {/* Texte */}
                           <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
                             <div style={{
                               fontSize: 10, fontWeight: 800, letterSpacing: 3, textTransform: "uppercase",
@@ -894,16 +897,19 @@
                               marginTop: 10, fontSize: 9, color: "rgba(255,255,255,0.25)",
                               letterSpacing: 1.5, fontStyle: "italic",
                             }}>
-                              — Tyler Durden, probablement
+                            - Tyler Durden, probablement...
                             </div>
                           </div>
                         </div>
-                        {/* Flèche vers le haut */}
+                        {/* Flèche */}
                         <div style={{
-                          position: "absolute", top: -8, left: "50%", transform: "translateX(-50%)",
+                          position: "absolute",
+                          ...(isMobile
+                            ? { top: -8, borderLeft: "10px solid transparent", borderRight: "10px solid transparent", borderBottom: "10px solid #1a0a0a" }
+                            : { bottom: -8, borderLeft: "10px solid transparent", borderRight: "10px solid transparent", borderTop: "10px solid #1a0a0a" }
+                          ),
+                          left: "50%", transform: "translateX(-50%)",
                           width: 0, height: 0,
-                          borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
-                          borderBottom: "10px solid #1a0a0a",
                         }} />
                       </div>
                     )}
