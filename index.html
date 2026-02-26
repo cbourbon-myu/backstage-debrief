@@ -817,9 +817,9 @@
   				  borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
 				  }}
 				    onMouseEnter={e => e.currentTarget.querySelector("img").style.opacity = "1"}
-				    onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.25"}
+				    onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.7"}
 				  >
- 				   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 16, height: 16, objectFit: "contain", opacity: 0.25, transition: "opacity 0.2s" }} />{!isMobile && " Reset"}
+ 				   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 16, height: 16, objectFit: "contain", opacity: 0.7, transition: "opacity 0.2s" }} />{!isMobile && " Reset"}
  				 </button>
 				)}
 
@@ -1451,9 +1451,8 @@
                   }} />
                   {/* Texte */}
 					<div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "left" }}>
-						<div style={{ fontSize: isMobile ? 14 : 18, fontWeight: 700, color: "#F97316", marginBottom: 8, textAlign: "center"}}>🎤 Outro</div>
-						<div style={{ fontSize: isMobile ? 20 : 28, marginBottom: 8 }}>{msgData.emoji}</div>
-  						<div style={{ fontSize: isMobile ? 14 : 18, color: "#fff", fontStyle: "italic", lineHeight: 1.6, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+						<div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#F97316", marginBottom: 8, textAlign: "center"}}>🎤 Outro</div>
+						<div style={{ fontSize: isMobile ? 14 : 18, color: "#fff", fontStyle: "italic", lineHeight: 1.6, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}> <div style={{ fontSize: isMobile ? 20 : 28, marginBottom: 8 }}>{msgData.emoji}</div>
    						"{msgData.text}"
   					</div>
 				  </div>
