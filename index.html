@@ -20,6 +20,14 @@
     @media print { .no-print { display: none !important; } body { background: #fff; } }
     .vote-icon { transition: transform 0.3s ease, filter 0.3s ease !important; }
     .vote-icon:hover { transform: scale(1.3) rotate(-8deg) !important; filter: drop-shadow(0 2px 8px rgba(249,115,22,0.5)) !important; }
+
+    /* --- RESPONSIVE UTILITIES --- */
+    @media (max-width: 768px) {
+      .hide-mobile { display: none !important; }
+    }
+    @media (min-width: 769px) {
+      .hide-desktop { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -55,6 +63,22 @@
     const IMG_HEADER = window.__IMG_HEADER__;
     const IMG_RULES = window.__IMG_RULES__;
     const IMG_ACTIONS = window.__IMG_ACTIONS__;
+
+    // --- RESPONSIVE HOOK ---
+    function useResponsive() {
+      const [width, setWidth] = useState(window.innerWidth);
+      useEffect(() => {
+        const handle = () => setWidth(window.innerWidth);
+        window.addEventListener("resize", handle);
+        return () => window.removeEventListener("resize", handle);
+      }, []);
+      return {
+        isMobile: width <= 768,
+        isTablet: width > 768 && width <= 1024,
+        isDesktop: width > 1024,
+        width,
+      };
+    }
 
     const CATEGORIES = [
       { id: "rock", label: "🎸 A rocké", color: "#92400E", bg: "#FEF9C3", border: "#CA8A04" },
@@ -212,8 +236,8 @@
     function SprintDateScreen({ onSave }) {
       const [date, setDate] = React.useState(new Date().toISOString().split("T")[0]);
       return (
-        <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: "48px 40px", maxWidth: 440, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
+        <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: "48px 40px", maxWidth: 440, width: "100%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
             <img src="assets/Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
             <div style={{ fontSize: 22, fontWeight: 800, color: "#1F2937", marginBottom: 8 }}>Nouveau Sprint !</div>
             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 24 }}>Renseigne la date du sprint pour configurer la session.</div>
@@ -229,11 +253,12 @@
       );
     }
     function LoginScreen({ onSignIn, error, loading }) {
+      const { isMobile } = useResponsive();
       return (
-        <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: "36px 56px 56px 56px", maxWidth: 520, width: "90%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
-            <img src="assets/Batterie.png" style={{ width: 120, height: 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
-            <div style={{ fontSize: 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
+        <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div style={{ background: "#FEF5EC", borderRadius: 24, padding: isMobile ? "28px 20px 36px" : "36px 56px 56px 56px", maxWidth: 520, width: "100%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.1)" }}>
+            <img src="assets/Batterie.png" style={{ width: isMobile ? 90 : 120, height: isMobile ? 90 : 120, borderRadius: "50%", marginBottom: 12, objectFit: "cover" }} />
+            <div style={{ fontSize: isMobile ? 22 : 26, fontWeight: 800, color: "#1F2937", marginBottom: 4 }}>Backstage Debrief</div>
             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 8 }}>Rétro Sprint — MyUnisoft GI</div>
             <button onClick={onSignIn} disabled={loading} style={{
               padding: "14px 40px", borderRadius: 12, border: "2px solid #E8C9A8",
@@ -258,6 +283,7 @@
     // --- MAIN APP ---
     function BackstageDebrief() {
       const { user, loading: authLoading, error: authError, signIn, signOut } = useAuth();
+      const { isMobile, isTablet, isDesktop, width } = useResponsive();
       const isAuthed = !!user;
       const userName = user?.displayName?.split(" ")[0] || "Anonyme";
       const isAdmin = ADMIN_EMAILS.includes(user?.email);
@@ -317,17 +343,14 @@
           presenceRef.onDisconnect().remove();
         };
 
-        // Re-register on reconnect
         connectedRef.on("value", snap => {
           if (snap.val() === true) registerPresence();
         });
 
-        // Heartbeat every 30s
         const heartbeat = setInterval(() => {
           presenceRef.update({ lastSeen: Date.now() });
         }, 30000);
 
-        // Listen to all presence entries, filter stale (>90s)
         allRef.on("value", snap => {
           const val = snap.val();
           if (!val) { setConnectedUsers([]); return; }
@@ -338,14 +361,12 @@
             if (u.lastSeen && (now - u.lastSeen) < 90000) {
               active.push(u);
             } else if (!u.lastSeen || (now - u.lastSeen) >= 90000) {
-              // Nettoyer les entrées fantômes
               db.ref(`retro-${sprintDateKey}/presence/${uid}`).remove();
             }
           });
           setConnectedUsers(active);
         });
 
-        // Cleanup on page unload
         const handleUnload = () => presenceRef.remove();
         window.addEventListener("beforeunload", handleUnload);
 
@@ -399,7 +420,6 @@
       const [showUserMenu, setShowUserMenu] = useState(false);
       const [showIntegration, setShowIntegration] = useState(false);
 
-      // Fermer les dropdowns au clic en dehors
       useEffect(() => {
         const handleClickOutside = (e) => {
           if (!e.target.closest("[data-dropdown]")) {
@@ -417,7 +437,6 @@
       const [confluenceUrl, setConfluenceUrl] = useState(null);
       const feedbackInputRef = useRef(null);
 
-      // Charger confluenceUrl depuis Firebase
       useEffect(() => {
         if (!isAuthed || !db || !sprintDateKey) return;
         const ref = db.ref(`retro-${sprintDateKey}/confluenceUrl`);
@@ -443,7 +462,7 @@
 
       if (!sprintDateKey) {
         return (
-          <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ minHeight: "100vh", background: "#F8EBDB", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
             <div style={{ textAlign: "center", color: "#6B7280", fontSize: 15 }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
               En attente de la configuration du sprint par l'animateur…
@@ -575,13 +594,18 @@
 
       const syncColors = { synced: "#10B981", saving: "#F59E0B", connecting: "#60A5FA", error: "#EF4444" };
 
+      // --- VOTE BUTTON SIZE ---
+      const voteSize = isMobile ? 42 : 52;
+      const voteFontSize = isMobile ? 22 : 26;
+
       return (
-        <div style={{ minHeight: "100vh", zoom: 1.15 }}>
-          {/* HEADER with background image */}
+        <div style={{ minHeight: "100vh", zoom: isMobile ? 1 : 1.15 }}>
+          {/* ==================== HEADER ==================== */}
           <div style={{
             position: "relative", zIndex: 10,
-            padding: "32px 32px", display: "flex", alignItems: "center",
-            justifyContent: "space-between", flexWrap: "wrap", gap: 12, minHeight: 110,
+            padding: isMobile ? "16px 12px" : "32px 32px",
+            display: "flex", alignItems: "center",
+            justifyContent: "space-between", flexWrap: "wrap", gap: isMobile ? 8 : 12, minHeight: isMobile ? 80 : 110,
           }}>
             {/* Background image */}
             <div style={{
@@ -595,22 +619,25 @@
               background: "linear-gradient(135deg, rgba(28,10,10,0.85) 0%, rgba(59,15,15,0.80) 40%, rgba(120,30,20,0.45) 100%)",
             }} />
 
-          <div style={{ position: "relative", zIndex: 1 }}>
-  			<div style={{ fontSize: 34, fontWeight: 800, color: "#F97316", letterSpacing: 2.5, display: "flex", alignItems: "center" }}>
-  			  <img src="assets/Batterie.png" onClick={() => setZoomedImage("assets/Batterie.png")} style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", marginRight: 12, cursor: "pointer" }} />
-  			  BACKSTAGE DEBRIEF
- 			 </div>
-			</div>
-			  
-            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+            {/* Logo + Title */}
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ fontSize: isMobile ? 20 : 34, fontWeight: 800, color: "#F97316", letterSpacing: isMobile ? 1 : 2.5, display: "flex", alignItems: "center" }}>
+                <img src="assets/Batterie.png" onClick={() => setZoomedImage("assets/Batterie.png")} style={{ width: isMobile ? 44 : 72, height: isMobile ? 44 : 72, borderRadius: "50%", objectFit: "cover", marginRight: isMobile ? 8 : 12, cursor: "pointer" }} />
+                {isMobile ? "BACKSTAGE" : "BACKSTAGE DEBRIEF"}
+              </div>
+            </div>
+
+            {/* Toolbar */}
+            <div style={{ display: "flex", gap: isMobile ? 4 : 8, alignItems: "center", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
               {/* Sync */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.12)", borderRadius: 8, padding: "0 12px", height: 34 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.12)", borderRadius: 8, padding: isMobile ? "0 8px" : "0 12px", height: 34 }}>
                 <div style={{ width: 10, height: 10, borderRadius: "50%", background: syncColors[overallStatus], flexShrink: 0,
                   animation: overallStatus === "saving" || overallStatus === "connecting" ? "pulse 1s infinite" : "none",
                   boxShadow: "0 0 6px " + syncColors[overallStatus] }} />
                 <span style={{ fontSize: 18, lineHeight: 1, display: "flex", alignItems: "center" }}>{overallStatus === "synced" ? "🎥" : overallStatus === "saving" ? "💾" : overallStatus === "connecting" ? "📡" : "⚠️"}</span>
-                <span style={{ fontSize: 12, color: "#fff", opacity: 0.85 }}>{{synced: "En direct", saving: "Enregistrement…", connecting: "Connexion…", error: "Erreur"}[overallStatus]}</span>
+                {!isMobile && <span style={{ fontSize: 12, color: "#fff", opacity: 0.85 }}>{{synced: "En direct", saving: "Enregistrement…", connecting: "Connexion…", error: "Erreur"}[overallStatus]}</span>}
               </div>
+
               {/* Participants connectés */}
               <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowPresence(!showPresence); setShowUserMenu(false); setShowIntegration(false); }} style={{
@@ -649,6 +676,7 @@
                   </div>
                 )}
               </div>
+
               {/* Dropdown Partager */}
               <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowIntegration(!showIntegration); setShowPresence(false); setShowUserMenu(false); }} className="no-print" style={{
@@ -657,7 +685,7 @@
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
                   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/fusee.gif" style={{ width: 22, height: 22, objectFit: "contain" }} />
-                  <span style={{ fontSize: 12, fontWeight: 500 }}>Partager</span>
+                  {!isMobile && <span style={{ fontSize: 12, fontWeight: 500 }}>Partager</span>}
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showIntegration ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
                 {showIntegration && (
@@ -719,12 +747,16 @@
                   </div>
                 )}
               </div>
+
+              {/* Reset */}
               <button onClick={resetAll} className="no-print" style={{
                 display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
                 borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7, fontFamily: "inherit",
               }}>
-			  <span style={{ fontSize: 18 }}>🔄</span> Reset</button>
-              {/* Profil utilisateur avec dropdown */}
+                <span style={{ fontSize: 18 }}>🔄</span>{!isMobile && " Reset"}
+              </button>
+
+              {/* Profil utilisateur */}
               <div data-dropdown style={{ position: "relative" }}>
                 <button onClick={() => { setShowUserMenu(!showUserMenu); setShowPresence(false); setShowIntegration(false); }} style={{
                   display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.2)",
@@ -732,7 +764,7 @@
                   cursor: "pointer", color: "#fff", fontFamily: "inherit", height: 34,
                 }}>
                   {user.photoURL && <img src={user.photoURL} style={{ width: 24, height: 24, borderRadius: "50%" }} referrerPolicy="no-referrer" />}
-                  <span style={{ fontSize: 12, fontWeight: 500 }}>{userName}</span>
+                  {!isMobile && <span style={{ fontSize: 12, fontWeight: 500 }}>{userName}</span>}
                   <span style={{ fontSize: 9, opacity: 0.7, transition: "transform 0.2s", display: "inline-block", transform: showUserMenu ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
                 </button>
                 {showUserMenu && (
@@ -758,31 +790,38 @@
                 )}
               </div>
             </div>
-            {/* Info header — sous-titre à gauche, mode collab à droite */}
+
+            {/* Info header — sous-titre */}
             <div style={{
-              width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
-              position: "relative", zIndex: 0, marginTop: -4,
+              width: "100%", display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              justifyContent: "space-between", alignItems: isMobile ? "flex-start" : "center",
+              position: "relative", zIndex: 0, marginTop: -4, gap: isMobile ? 2 : 0,
             }}>
-              <div style={{ fontSize: 13, color: "#fff", opacity: 0.92 }}>
-                Tous les 15 jours • Mardi 14h30-15h30 • Ce qui se dit en backstage reste en backstage 🤫
+              <div style={{ fontSize: isMobile ? 11 : 13, color: "#fff", opacity: 0.92 }}>
+                {isMobile ? "Mardi 14h30-15h30 🤫" : "Tous les 15 jours • Mardi 14h30-15h30 • Ce qui se dit en backstage reste en backstage 🤫"}
               </div>
-              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.55)" }}>
+              <div style={{ fontSize: isMobile ? 9.5 : 10.5, color: "rgba(255,255,255,0.55)" }}>
                 <em>Mode collaboratif temps réel</em> — Sprint du {sprintDateLabel}
               </div>
             </div>
           </div>
 
-          <div style={{ maxWidth: 1400, margin: "0 auto", padding: "24px 20px 40px" }}>
+          {/* ==================== MAIN CONTENT ==================== */}
+          <div style={{ maxWidth: 1400, margin: "0 auto", padding: isMobile ? "16px 10px 32px" : "24px 20px 40px" }}>
 
             {/* RIDEAU PLEIN ÉCRAN */}
             <ConcertCurtain visible={!!activeCurtain} catLabel={activeCurtain ? RATING_CAT_LABELS[activeCurtain] : ""} />
 
-            {/* RÈGLES DU PIT */}
+            {/* ==================== RÈGLES DU PIT ==================== */}
             <div style={{
               borderRadius: 16, padding: 0,
-              marginBottom: 20, position: "relative", display: "flex", alignItems: "stretch", minHeight: 220,
+              marginBottom: 20, position: "relative",
+              display: "flex", flexDirection: isMobile ? "column" : "row",
+              alignItems: "stretch", minHeight: isMobile ? "auto" : 220,
+              overflow: "hidden",
             }}>
-              {/* Image de fond sur tout l'encart */}
+              {/* Image de fond */}
               <div style={{
                 position: "absolute", inset: 0,
                 backgroundImage: IMG_RULES,
@@ -790,49 +829,51 @@
                 opacity: 0.5,
                 borderRadius: 16,
               }} />
-              {/* Overlay dégradé : opaque à gauche → transparent à droite */}
+              {/* Overlay dégradé */}
               <div style={{
                 position: "absolute", inset: 0,
-                background: "linear-gradient(to right, #FFF6EE 0%, #FFF6EE 40%, rgba(255,246,238,0.7) 60%, rgba(255,246,238,0.2) 80%, transparent 100%)",
+                background: isMobile
+                  ? "linear-gradient(to bottom, #FFF6EE 0%, #FFF6EE 50%, rgba(255,246,238,0.7) 70%, rgba(255,246,238,0.3) 100%)"
+                  : "linear-gradient(to right, #FFF6EE 0%, #FFF6EE 40%, rgba(255,246,238,0.7) 60%, rgba(255,246,238,0.2) 80%, transparent 100%)",
                 borderRadius: 16,
               }} />
 
-              <div style={{ flex: 1, padding: "0px 28px", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: "#78350F", marginBottom: 6, display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
-                  <span style={{ fontSize: 36 }}>🎼</span>
+              <div style={{ flex: 1, padding: isMobile ? "16px 16px 20px" : "0px 28px", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, color: "#78350F", marginBottom: 6, display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
+                  <span style={{ fontSize: isMobile ? 28 : 36 }}>🎼</span>
                   <span
-                    onMouseEnter={() => setShowPitTooltip(true)}
+                    onMouseEnter={() => !isMobile && setShowPitTooltip(true)}
                     onMouseLeave={() => setShowPitTooltip(false)}
+                    onClick={() => isMobile && setShowPitTooltip(!showPitTooltip)}
                     style={{ cursor: "pointer", position: "relative" }}
                   >
                     Règles du Pitt
                     {showPitTooltip && (
                       <div style={{
-                        position: "absolute", bottom: "calc(100% + 14px)", left: "50%", transform: "translateX(-50%)",
-                        minWidth: 380, padding: 0, zIndex: 200, animation: "tooltipFadeIn 0.3s ease",
+                        position: "absolute",
+                        bottom: isMobile ? "auto" : "calc(100% + 14px)",
+                        top: isMobile ? "calc(100% + 10px)" : "auto",
+                        left: "50%", transform: "translateX(-50%)",
+                        minWidth: isMobile ? 260 : 380, padding: 0, zIndex: 200, animation: "tooltipFadeIn 0.3s ease",
                         borderRadius: 12, overflow: "hidden",
                         boxShadow: "0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)",
                       }}>
-                        {/* Fond Fight Club */}
                         <div style={{
                           background: "linear-gradient(135deg, #1a0a0a 0%, #2d1010 40%, #1a0505 100%)",
-                          padding: "18px 22px",
+                          padding: isMobile ? "14px 16px" : "18px 22px",
                           position: "relative",
                           overflow: "hidden",
                         }}>
-                          {/* Image Fight Club en fond */}
                           <div style={{
                             position: "absolute", inset: 0,
                             backgroundImage: "url('https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/GIClub.png')",
                             backgroundSize: "cover", backgroundPosition: "center",
                             opacity: 0.15,
                           }} />
-                          {/* Barre rouge sang en haut */}
                           <div style={{
                             position: "absolute", top: 0, left: 0, right: 0, height: 6,
                             background: "linear-gradient(90deg, transparent, #DC2626, #B91C1C, transparent)",
                           }} />
-                          {/* Texte */}
                           <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
                             <div style={{
                               fontSize: 10, fontWeight: 800, letterSpacing: 3, textTransform: "uppercase",
@@ -841,7 +882,7 @@
                               🥊 1ère règle du GI Club 🥊
                             </div>
                             <div style={{
-                              fontSize: 16, fontWeight: 700, color: "#FAFAF9",
+                              fontSize: isMobile ? 13 : 16, fontWeight: 700, color: "#FAFAF9",
                               textTransform: "uppercase", lineHeight: 1.4,
                               textShadow: "0 2px 8px rgba(220,38,38,0.3)",
                             }}>
@@ -855,31 +896,30 @@
                             </div>
                           </div>
                         </div>
-                        {/* Flèche */}
-                        <div style={{
+                        {!isMobile && <div style={{
                           position: "absolute", bottom: -8, left: "50%", transform: "translateX(-50%)",
                           width: 0, height: 0,
                           borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
                           borderTop: "10px solid #1a0a0a",
-                        }} />
+                        }} />}
                       </div>
                     )}
                   </span>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 9, maxWidth: 700, paddingLeft: 60 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 7 : 9, maxWidth: 700, paddingLeft: isMobile ? 10 : 60 }}>
                   {["Respect mutuel", "Focus sur les processus, pas sur les personnes", "Tout le monde participe", "Ce qui est dit en rétro reste en rétro", "On identifie, on propose, on agit"].map((rule, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 14, color: "#57534E", whiteSpace: "nowrap" }}>
-                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E11D48", flexShrink: 0, marginLeft: 36 }} />
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: isMobile ? 12.5 : 14, color: "#57534E", whiteSpace: isMobile ? "normal" : "nowrap" }}>
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E11D48", flexShrink: 0, marginLeft: isMobile ? 0 : 36 }} />
                       {rule}
                     </div>
                   ))}
                 </div>
               </div>
-  	   </div>
+            </div>
 
-            {/* RESSENTI DU SPRINT */}
+            {/* ==================== RESSENTI DU SPRINT ==================== */}
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
@@ -895,7 +935,7 @@
                 </svg>
                 Le ressenti du Sprint
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
                 {[
                   { id: "ambiance", label: "Ambiance du Sprint", color: "#9F1239", bg: "#FFF1F2", border: "#E11D48" },
                   { id: "satisfaction", label: "Satisfaction Travail", color: "#92400E", bg: "#FEF9C3", border: "#CA8A04" },
@@ -905,8 +945,8 @@
                   const avg = getAvg(cat.id);
                   const voters = getRatingsForCategory(cat.id);
                   return (
-                    <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: "16px 14px", textAlign: "center" }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 10px" : "16px 14px", textAlign: "center" }}>
+                    <div style={{ fontSize: isMobile ? 13 : 14, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                       {cat.id === "ambiance" ? (
                         <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
@@ -914,12 +954,12 @@
                       ) : null}
                       {cat.label}
                     </div>
-                      <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12 }}>
+                      <div style={{ display: "flex", justifyContent: "center", gap: isMobile ? 6 : 10, marginBottom: 12 }}>
                         {[1,2,3,4,5].map(score => (
                           <button key={score} onClick={() => submitRating(cat.id, score)} className="vote-icon" style={{
-                            width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
+                            width: voteSize, height: voteSize, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
                             background: myScore === score ? cat.bg : "#FFFAF5",
-                            fontSize: 26, cursor: "pointer", transition: "all 0.2s",
+                            fontSize: voteFontSize, cursor: "pointer", transition: "all 0.2s",
                             transform: myScore === score ? "scale(1.15)" : "scale(1)",
                             boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
                           }} title={RATING_LABELS[score].label}>{RATING_LABELS[score].emoji}</button>
@@ -947,7 +987,6 @@
                             <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
                             <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
                             <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 10 }}>/ 5 — {RATING_LABELS[Math.round(avg)]?.label}</div>
-                            {/* Barre de progression */}
                             <div style={{ background: "#F0DCC8", borderRadius: 99, height: 8, margin: "0 8px 12px", overflow: "hidden" }}>
                               <div style={{ height: "100%", borderRadius: 99, background: cat.color, width: (avg / 5 * 100) + "%", transition: "width 1s ease" }} />
                             </div>
@@ -968,15 +1007,20 @@
               </div>
             </div>
 
-            {/* 3 COLUMNS */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 18, marginBottom: 24 }}>
+            {/* ==================== 3 COLUMNS FEEDBACKS ==================== */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : isTablet ? "1fr 1fr" : "1fr 1fr 1fr",
+              gap: isMobile ? 12 : 18,
+              marginBottom: 24,
+            }}>
               {CATEGORIES.map(cat => {
                 const col = COLUMN_MAP[cat.id];
                 const items = getFeedbacksByCategory(cat.id);
                 return (
-                  <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 16, border: "2px solid " + col.border, minHeight: 130, padding: "20px 18px" }}>
-                    <div style={{ fontSize: 17, fontWeight: 700, color: col.border, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 26 }}>{col.title.split(" ")[0]}</span>
+                  <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 16, border: "2px solid " + col.border, minHeight: 130, padding: isMobile ? "14px 12px" : "20px 18px" }}>
+                    <div style={{ fontSize: isMobile ? 15 : 17, fontWeight: 700, color: col.border, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: isMobile ? 22 : 26 }}>{col.title.split(" ")[0]}</span>
                       <span>{col.title.split(" ").slice(1).join(" ")}</span>
                       {items.length > 0 && <span style={{ fontSize: 11, fontWeight: 600, background: col.border + "20", color: col.color, borderRadius: 10, padding: "1px 8px" }}>{items.length}</span>}
                     </div>
@@ -1011,13 +1055,13 @@
               })}
             </div>
 
-            {/* AJOUTER UN RETOUR */}
-            <div className="no-print" style={{ background: "#FFFAF5", borderRadius: 16, border: "1px solid #F5D0B0", padding: "20px 24px", marginBottom: 24 }}>
-              <div style={{ fontSize: 17, fontWeight: 700, color: "#1F2937", marginBottom: 12 }}>✍ Ajouter un retour</div>
-              <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+            {/* ==================== AJOUTER UN RETOUR ==================== */}
+            <div className="no-print" style={{ background: "#FFFAF5", borderRadius: 16, border: "1px solid #F5D0B0", padding: isMobile ? "14px 12px" : "20px 24px", marginBottom: 24 }}>
+              <div style={{ fontSize: isMobile ? 15 : 17, fontWeight: 700, color: "#1F2937", marginBottom: 12 }}>✍ Ajouter un retour</div>
+              <div style={{ display: "flex", gap: isMobile ? 4 : 8, marginBottom: 12, flexWrap: "wrap" }}>
                 {CATEGORIES.map(cat => (
                   <button key={cat.id} onClick={() => setSelectedCat(cat.id)} style={{
-                    padding: "5px 15px", borderRadius: 16, fontSize: 12.5, cursor: "pointer",
+                    padding: isMobile ? "5px 10px" : "5px 15px", borderRadius: 16, fontSize: isMobile ? 11 : 12.5, cursor: "pointer",
                     fontWeight: selectedCat === cat.id ? 700 : 500, transition: "all 0.2s",
                     border: selectedCat === cat.id ? "2px solid " + cat.color : "1.5px solid " + cat.border,
                     background: cat.border,
@@ -1031,17 +1075,17 @@
                   onChange={e => setFeedbackText(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && addFeedback()}
                   placeholder="Votre retour..."
-                  style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: "1px solid #E8C9A8", fontSize: 13.5, background: "#FFFAF5" }}
+                  style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: "1px solid #E8C9A8", fontSize: 13.5, background: "#FFFAF5", minWidth: 0 }}
                   onFocus={e => e.target.style.borderColor = CATEGORIES.find(c => c.id === selectedCat).border}
                   onBlur={e => e.target.style.borderColor = "#E8C9A8"}
                 />
-                <button onClick={addFeedback} style={{ width: 42, height: 42, borderRadius: 10, border: "none", background: "#F97316", color: "#fff", fontSize: 22, fontWeight: 700, cursor: "pointer" }}>+</button>
+                <button onClick={addFeedback} style={{ width: 42, height: 42, borderRadius: 10, border: "none", background: "#F97316", color: "#fff", fontSize: 22, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>+</button>
               </div>
             </div>
 
- 		   {/* ROTI */}
+            {/* ==================== ROTI ==================== */}
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <linearGradient id="goldGrad2" x1="0" y1="0" x2="1" y2="1">
@@ -1064,17 +1108,17 @@
                 const avg = getAvg(cat.id);
                 const voters = getRatingsForCategory(cat.id);
                 return (
-                  <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: "20px 20px", textAlign: "center", maxWidth: 400 }}>
-                    <div style={{ fontSize: 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
+                  <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 12px" : "20px 20px", textAlign: "center", maxWidth: isMobile ? "100%" : 400 }}>
+                    <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
                       <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
                       <span>ROTI</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center", gap: 10, marginBottom: 12, marginTop: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "center", gap: isMobile ? 6 : 10, marginBottom: 12, marginTop: 12 }}>
                       {[1,2,3,4,5].map(score => (
                         <button key={score} onClick={() => submitRating(cat.id, score)} className="vote-icon" style={{
-                          width: 52, height: 52, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
+                          width: voteSize, height: voteSize, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
                           background: myScore === score ? cat.bg : "#FFFAF5",
-                          fontSize: 26, cursor: "pointer", transition: "all 0.2s",
+                          fontSize: voteFontSize, cursor: "pointer", transition: "all 0.2s",
                           transform: myScore === score ? "scale(1.15)" : "scale(1)",
                           boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
                         }} title={RATING_LABELS[score].label}>{RATING_LABELS[score].emoji}</button>
@@ -1102,7 +1146,6 @@
                           <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
                           <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
                           <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 10 }}>/ 5 — {RATING_LABELS[Math.round(avg)]?.label}</div>
-                          {/* Barre de progression */}
                           <div style={{ background: "#F0DCC8", borderRadius: 99, height: 8, margin: "0 8px 12px", overflow: "hidden" }}>
                             <div style={{ height: "100%", borderRadius: 99, background: cat.color, width: (avg / 5 * 100) + "%", transition: "width 1s ease" }} />
                           </div>
@@ -1122,30 +1165,34 @@
               })()}
             </div>
 
- 		   {/* ACTIONS */}
-		<div style={{
-		  borderRadius: 16, padding: 0, marginBottom: 24, position: "relative", overflow: "hidden", display: "flex", alignItems: "stretch", minHeight: 240,
-		}}>
-		  {/* Image de fond sur tout l'encart */}
-		  <div style={{
-		    position: "absolute", inset: 0,
-		    backgroundImage: IMG_ACTIONS,
-		    backgroundSize: "cover", backgroundPosition: "center top",
-		    opacity: 0.45,
-		  }} />
-		  {/* Overlay dégradé unique : transparent à gauche → sombre à droite */}
-		  <div style={{
-		    position: "absolute", inset: 0,
-		    background: "linear-gradient(to right, rgba(28,10,10,0.2) 0%, rgba(28,10,10,0.75) 25%, rgba(38,12,12,0.95) 40%, rgba(50,14,14,1) 55%, rgba(50,14,14,1) 100%)",
-		  }} />
+            {/* ==================== ACTIONS ==================== */}
+            <div style={{
+              borderRadius: 16, padding: 0, marginBottom: 24, position: "relative", overflow: "hidden",
+              display: "flex", flexDirection: isMobile ? "column" : "row",
+              alignItems: "stretch", minHeight: isMobile ? "auto" : 240,
+            }}>
+              {/* Image de fond */}
+              <div style={{
+                position: "absolute", inset: 0,
+                backgroundImage: IMG_ACTIONS,
+                backgroundSize: "cover", backgroundPosition: "center top",
+                opacity: 0.45,
+              }} />
+              {/* Overlay dégradé */}
+              <div style={{
+                position: "absolute", inset: 0,
+                background: isMobile
+                  ? "linear-gradient(to bottom, rgba(28,10,10,0.7) 0%, rgba(50,14,14,1) 40%)"
+                  : "linear-gradient(to right, rgba(28,10,10,0.2) 0%, rgba(28,10,10,0.75) 25%, rgba(38,12,12,0.95) 40%, rgba(50,14,14,1) 55%, rgba(50,14,14,1) 100%)",
+              }} />
 
-		  {/* Espace réservé à l'image (invisible, juste pour le layout) */}
-		  <div style={{ width: 300, flexShrink: 0 }} />
+              {/* Spacer desktop only */}
+              {!isMobile && <div style={{ width: 300, flexShrink: 0 }} />}
 
-              <div style={{ flex: 1, padding: "20px 24px", position: "relative", zIndex: 1 }}>
+              <div style={{ flex: 1, padding: isMobile ? "16px 14px" : "20px 24px", position: "relative", zIndex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "#F97316" }}>🎯 Actions pour le prochain sprint</div>
-                  <div style={{ border: "1.2px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316" }}>{actions.length}/3 max</div>
+                  <div style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: "#F97316" }}>🎯 Actions pour le prochain sprint</div>
+                  <div style={{ border: "1.2px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316", flexShrink: 0, marginLeft: 8 }}>{actions.length}/3 max</div>
                 </div>
                 <div style={{ borderTop: "1px solid rgba(249,115,22,0.3)", marginBottom: 14 }} />
 
@@ -1184,10 +1231,10 @@
                     <div style={{ fontSize: 12.5, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginBottom: 7 }}>Ajouter une action</div>
                     <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
                       <input type="text" value={actionDesc} onChange={e => setActionDesc(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
-                        placeholder="Description de l'action..." style={{ flex: 2, minWidth: 180, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontSize: 12.5, background: "rgba(255,255,255,0.08)", color: "#fff" }}
+                        placeholder="Description de l'action..." style={{ flex: 2, minWidth: isMobile ? "100%" : 180, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontSize: 12.5, background: "rgba(255,255,255,0.08)", color: "#fff" }}
                         onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.2)"} />
                       <input type="text" value={actionResp} onChange={e => setActionResp(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
-                        placeholder="Responsable..." style={{ flex: 1, minWidth: 130, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontSize: 12.5, background: "rgba(255,255,255,0.08)", color: "#fff" }}
+                        placeholder="Responsable..." style={{ flex: 1, minWidth: isMobile ? "100%" : 130, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontSize: 12.5, background: "rgba(255,255,255,0.08)", color: "#fff" }}
                         onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.2)"} />
                     </div>
                     <button onClick={addAction} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #F97316, #EA580C)", color: "#fff", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>+ Ajouter l'action</button>
@@ -1197,38 +1244,38 @@
             </div>
 
             {/* FOOTER */}
-            <div style={{ textAlign: "center", fontSize: 13.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "6px 0 16px" }}>
+            <div style={{ textAlign: "center", fontSize: isMobile ? 12 : 13.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "6px 0 16px" }}>
               "On repart avec 2-3 actions concrètes. L'idée : être un peu meilleurs pour le prochain set." 🤘
             </div>
           </div>
 
           <style>{`
             @keyframes curtainLeft {
-        0%   { transform: translateX(-100%); }
-        20%  { transform: translateX(0%); }
-        80%  { transform: translateX(0%); }
-        100% { transform: translateX(-100%); }
-      }
-      @keyframes curtainRight {
-        0%   { transform: translateX(100%); }
-        20%  { transform: translateX(0%); }
-        80%  { transform: translateX(0%); }
-        100% { transform: translateX(100%); }
-      }
-      @keyframes curtainText {
-        0%   { opacity: 0; transform: scale(0.5); }
-        25%  { opacity: 1; transform: scale(1.1); }
-        70%  { opacity: 1; transform: scale(1); }
-        100% { opacity: 0; transform: scale(0.8); }
-      }
-      @keyframes resultReveal {
-        0%   { opacity: 0; transform: translateY(10px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-6px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+              0%   { transform: translateX(-100%); }
+              20%  { transform: translateX(0%); }
+              80%  { transform: translateX(0%); }
+              100% { transform: translateX(-100%); }
+            }
+            @keyframes curtainRight {
+              0%   { transform: translateX(100%); }
+              20%  { transform: translateX(0%); }
+              80%  { transform: translateX(0%); }
+              100% { transform: translateX(100%); }
+            }
+            @keyframes curtainText {
+              0%   { opacity: 0; transform: scale(0.5); }
+              25%  { opacity: 1; transform: scale(1.1); }
+              70%  { opacity: 1; transform: scale(1); }
+              100% { opacity: 0; transform: scale(0.8); }
+            }
+            @keyframes resultReveal {
+              0%   { opacity: 0; transform: translateY(10px); }
+              100% { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(-6px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
             @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
             @keyframes tooltipFadeIn { 0% { opacity: 0; transform: translateX(-50%) translateY(6px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
           `}</style>
@@ -1238,7 +1285,7 @@
               display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
               backdropFilter: "blur(6px)",
             }}>
-              <img src={zoomedImage} style={{ maxWidth: "80vw", maxHeight: "80vh", objectFit: zoomedImage.includes("Batterie") ? "cover" : "contain", borderRadius: zoomedImage.includes("Batterie") ? "50%" : 16, boxShadow: "0 12px 40px rgba(0,0,0,0.5)", ...(zoomedImage.includes("Batterie") ? { width: "60vh", height: "60vh" } : {}) }} />
+              <img src={zoomedImage} style={{ maxWidth: isMobile ? "95vw" : "80vw", maxHeight: "80vh", objectFit: zoomedImage.includes("Batterie") ? "cover" : "contain", borderRadius: zoomedImage.includes("Batterie") ? "50%" : 16, boxShadow: "0 12px 40px rgba(0,0,0,0.5)", ...(zoomedImage.includes("Batterie") ? { width: isMobile ? "70vw" : "60vh", height: isMobile ? "70vw" : "60vh" } : {}) }} />
             </div>
           )}
         </div>
