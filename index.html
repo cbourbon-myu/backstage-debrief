@@ -817,9 +817,9 @@
   				  borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "inherit",
 				  }}
 				    onMouseEnter={e => e.currentTarget.querySelector("img").style.opacity = "1"}
-				    onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.5"}
+				    onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.25"}
 				  >
- 				   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 16, height: 16, objectFit: "contain", opacity: 0.35, transition: "opacity 0.2s" }} />{!isMobile && " Reset"}
+ 				   <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 16, height: 16, objectFit: "contain", opacity: 0.25, transition: "opacity 0.2s" }} />{!isMobile && " Reset"}
  				 </button>
 				)}
 
@@ -1450,9 +1450,9 @@
                     background: "linear-gradient(135deg, rgba(28,10,10,0.75) 0%, rgba(50,14,14,0.8) 50%, rgba(28,10,10,0.75) 100%)",
                   }} />
                   {/* Texte */}
-                  <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "center" }}>
-                    <div style={{ fontSize: isMobile ? 20 : 28, marginBottom: 8 }}>{msgData.emoji}</div>
-                    <div style={{ fontSize: isMobile ? 16 : 28, color: "#fff", fontStyle: "italic", lineHeight: 1.6, maxWidth: 600, margin: "0 auto", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                  <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "right" }}>
+                    <div style={{ fontSize: isMobile ? 20 : 24, marginBottom: 8 }}>{msgData.emoji}</div>
+                    <div style={{ fontSize: isMobile ? 14 : 20, color: "#fff", fontStyle: "italic", lineHeight: 1.6, maxWidth: 600, margin: "0 auto", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
                       "{msgData.text}"
                     </div>
                   </div>
