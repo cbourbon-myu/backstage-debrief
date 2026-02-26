@@ -1051,7 +1051,8 @@
                       {items.map(fbk => {
                         const isOwner = fbk.authorUid === user?.uid;
                         return (
-                        <div key={fbk.id} style={{ background: cat.bg, borderRadius: 10, padding: "9px 11px", fontSize: 13, color: "#1F2937", display: "flex", alignItems: "flex-start", gap: 8, border: "1px solid " + col.border + "33", animation: "fadeIn 0.3s ease" }}>
+                        <div key={fbk.id} style={{ background: cat.bg, borderRadius: 10, padding: "9px 11px", fontSize: 13, color: "#1F2937", display: "flex", alignItems: "flex-start", gap: 8, border: fbk.pinned ? "2px solid " + col.border : "1px solid " + col.border + "33", animation: "fadeIn 0.3s ease", position: "relative" }}>
+                          {fbk.pinned && <div style={{ position: "absolute", top: -1, right: 8, fontSize: 9, fontWeight: 700, color: col.border, background: cat.bg, padding: "0 4px", letterSpacing: 0.5 }}>📌 ÉPINGLÉ</div>}
                           {editingFeedback === fbk.id ? (
                             <input autoFocus defaultValue={fbk.text}
                               onBlur={e => { fb.updateItem(fbk.id, { text: e.target.value.trim() || fbk.text }); setEditingFeedback(null); }}
@@ -1063,6 +1064,10 @@
                               <div style={{ cursor: isOwner ? "pointer" : "default" }} onClick={() => isOwner && setEditingFeedback(fbk.id)}>{fbk.text}</div>
                               {fbk.author && <div style={{ fontSize: 10.5, color: col.color, marginTop: 3, opacity: 0.7 }}>— {fbk.author}</div>}
                             </div>
+                          )}
+                          {isAdmin && (
+                            <button onClick={() => fb.updateItem(fbk.id, { pinned: !fbk.pinned })} title={fbk.pinned ? "Désépingler" : "Épingler pour le résumé"} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, lineHeight: 1, flexShrink: 0, fontSize: 14, opacity: fbk.pinned ? 1 : 0.3, transition: "opacity 0.2s" }}
+                              onMouseEnter={e => e.currentTarget.style.opacity = "1"} onMouseLeave={e => e.currentTarget.style.opacity = fbk.pinned ? "1" : "0.3"}>📌</button>
                           )}
                           {isOwner && (
                             <button onClick={() => fb.removeItem(fbk.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, lineHeight: 1, flexShrink: 0 }}
@@ -1251,29 +1256,111 @@
             </div>
 
             {/* ==================== RÉSUMÉ DU SPRINT ==================== */}
-            <div style={{
-              borderRadius: 16, padding: 0, marginBottom: 24, position: "relative", overflow: "hidden",
-              minHeight: isMobile ? 120 : 180,
-            }}>
-              {/* Image de fond */}
-              <div style={{
-                position: "absolute", inset: 0,
-                backgroundImage: IMG_ACTIONS,
-                backgroundSize: "cover", backgroundPosition: "center top",
-                opacity: 0.45,
-              }} />
-              {/* Overlay dégradé */}
-              <div style={{
-                position: "absolute", inset: 0,
-                background: "linear-gradient(135deg, rgba(28,10,10,0.85) 0%, rgba(50,14,14,0.9) 50%, rgba(28,10,10,0.85) 100%)",
-              }} />
-              <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "24px 16px" : "32px 28px", textAlign: "center" }}>
-                <div style={{ fontSize: isMobile ? 16 : 20, fontWeight: 700, color: "#F97316", marginBottom: 8 }}>🎤 Résumé du sprint</div>
-                <div style={{ fontSize: isMobile ? 12 : 13.5, color: "rgba(255,255,255,0.5)", fontStyle: "italic" }}>
-                  Bientôt disponible — Le récap de fin de concert arrive !
+            {(() => {
+              const pinnedFeedbacks = feedbacks.filter(f => f.pinned);
+              const pinnedRock = pinnedFeedbacks.filter(f => f.category === "rock");
+              const pinnedFausse = pinnedFeedbacks.filter(f => f.category === "fausse");
+              const pinnedAmeliorer = pinnedFeedbacks.filter(f => f.category === "ameliorer");
+              const avgAmbiance = getAvg("ambiance");
+              const avgSatisfaction = getAvg("satisfaction");
+              const avgRoti = getAvg("roti");
+              const hasContent = pinnedFeedbacks.length > 0 || actions.length > 0 || avgAmbiance || avgSatisfaction || avgRoti;
+
+              return (
+                <div style={{
+                  borderRadius: 16, padding: 0, marginBottom: 24, position: "relative", overflow: "hidden",
+                  minHeight: isMobile ? 120 : 180,
+                }}>
+                  {/* Image de fond */}
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    backgroundImage: IMG_ACTIONS,
+                    backgroundSize: "cover", backgroundPosition: "center top",
+                    opacity: 0.45,
+                  }} />
+                  {/* Overlay dégradé */}
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: "linear-gradient(135deg, rgba(28,10,10,0.88) 0%, rgba(50,14,14,0.92) 50%, rgba(28,10,10,0.88) 100%)",
+                  }} />
+                  <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "24px 16px" : "32px 28px" }}>
+                    <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#F97316", marginBottom: 20, textAlign: "center" }}>🎤 Résumé du sprint</div>
+
+                    {!hasContent ? (
+                      <div style={{ fontSize: isMobile ? 12 : 13.5, color: "rgba(255,255,255,0.5)", fontStyle: "italic", textAlign: "center" }}>
+                        Épingle des retours avec 📌 pour construire le résumé
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+                        {/* --- Moyennes des votes --- */}
+                        {(avgAmbiance || avgSatisfaction || avgRoti) && (
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Ressenti global</div>
+                            <div style={{ display: "flex", gap: isMobile ? 10 : 16, flexWrap: "wrap", justifyContent: "center" }}>
+                              {[
+                                { label: "Ambiance", avg: avgAmbiance, color: "#E11D48", emoji: avgAmbiance ? RATING_LABELS[Math.round(avgAmbiance)]?.emoji : "" },
+                                { label: "Satisfaction", avg: avgSatisfaction, color: "#CA8A04", emoji: avgSatisfaction ? RATING_LABELS[Math.round(avgSatisfaction)]?.emoji : "" },
+                                { label: "ROTI", avg: avgRoti, color: "#EA580C", emoji: avgRoti ? RATING_LABELS[Math.round(avgRoti)]?.emoji : "" },
+                              ].filter(v => v.avg).map(v => (
+                                <div key={v.label} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: isMobile ? "10px 14px" : "12px 20px", textAlign: "center", border: "1px solid " + v.color + "44", minWidth: isMobile ? 90 : 110 }}>
+                                  <div style={{ fontSize: 24, marginBottom: 2 }}>{v.emoji}</div>
+                                  <div style={{ fontSize: 22, fontWeight: 900, color: v.color }}>{v.avg}</div>
+                                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{v.label}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* --- Retours épinglés --- */}
+                        {pinnedFeedbacks.length > 0 && (
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Retours clés</div>
+                            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 10 }}>
+                              {[
+                                { items: pinnedRock, label: "🎸 A rocké", color: "#CA8A04", bg: "rgba(254,249,195,0.12)", border: "#CA8A0444" },
+                                { items: pinnedFausse, label: "🔇 Fausses notes", color: "#E11D48", bg: "rgba(255,241,242,0.12)", border: "#E11D4844" },
+                                { items: pinnedAmeliorer, label: "💫 À améliorer", color: "#F97316", bg: "rgba(255,247,237,0.12)", border: "#F9731644" },
+                              ].filter(g => g.items.length > 0).map(g => (
+                                <div key={g.label} style={{ background: g.bg, borderRadius: 10, border: "1px solid " + g.border, padding: "10px 12px" }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: g.color, marginBottom: 8 }}>{g.label}</div>
+                                  <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                                    {g.items.map(f => (
+                                      <div key={f.id} style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>
+                                        • {f.text}
+                                        {f.author && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginLeft: 4 }}>— {f.author}</span>}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* --- Actions --- */}
+                        {actions.length > 0 && (
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Actions décidées</div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                              {actions.map(a => (
+                                <div key={a.id} style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 12px", border: "1px solid rgba(249,115,22,0.2)" }}>
+                                  <span style={{ fontSize: 14 }}>{a.done ? "✅" : "🎯"}</span>
+                                  <div style={{ flex: 1, fontSize: 12.5, color: "rgba(255,255,255,0.85)", textDecoration: a.done ? "line-through" : "none", opacity: a.done ? 0.6 : 1 }}>{a.description}</div>
+                                  {a.responsable && <div style={{ fontSize: 10.5, color: "#F97316", fontWeight: 500 }}>{a.responsable}</div>}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              );
+            })()}
 
             {/* FOOTER */}
             <div style={{ textAlign: "center", fontSize: isMobile ? 12 : 13.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "6px 0 16px" }}>
