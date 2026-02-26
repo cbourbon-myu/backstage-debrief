@@ -1419,6 +1419,43 @@
                 </div>
               );
             })()}
+
+            {/* ==================== FOOTER DYNAMIQUE ==================== */}
+            {(() => {
+              const a1 = getAvg("ambiance"), a2 = getAvg("satisfaction"), a3 = getAvg("roti");
+              const vals = [a1, a2, a3].filter(v => v !== null).map(Number);
+              const globalAvg = vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+              const msgData = globalAvg === null
+                ? { text: "Larsen en boucle, sueur au front et équipe au sommet : merci pour le chaos, on revient tout casser dans 15 jours.", emoji: "🤘🔥", gif: "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/msg2.gif" }
+                : globalAvg > 4
+                ? { text: "Feedback dans les oreilles et sang sur les cordes : merci la meute, le son était crade et c'est pour ça qu'on s'aime. On revient foutre le feu dans 15 jours.", emoji: "🤘🏚️", gif: "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/msg3.gif" }
+                : globalAvg >= 3
+                ? { text: "Larsen en boucle, sueur au front et équipe au sommet : merci pour le chaos, on revient tout casser dans 15 jours.", emoji: "🤘🔥", gif: "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/msg2.gif" }
+                : { text: "Le rideau tombe mais l'ampli siffle encore : merci à l'équipe, on sonne d'enfer ensemble et on remet le son dans 15 jours !", emoji: "🤘🎸", gif: "https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/msg1.gif" };
+              return (
+                <div style={{ borderRadius: 16, position: "relative", overflow: "hidden", marginBottom: 16, minHeight: isMobile ? 100 : 120 }}>
+                  {/* GIF de fond flouté */}
+                  <div style={{
+                    position: "absolute", inset: -10,
+                    backgroundImage: `url(${msgData.gif})`,
+                    backgroundSize: "cover", backgroundPosition: "center",
+                    filter: "blur(4px)", opacity: 0.5,
+                  }} />
+                  {/* Overlay sombre */}
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: "linear-gradient(135deg, rgba(28,10,10,0.75) 0%, rgba(50,14,14,0.8) 50%, rgba(28,10,10,0.75) 100%)",
+                  }} />
+                  {/* Texte */}
+                  <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "center" }}>
+                    <div style={{ fontSize: isMobile ? 20 : 28, marginBottom: 8 }}>{msgData.emoji}</div>
+                    <div style={{ fontSize: isMobile ? 12 : 14, color: "#fff", fontStyle: "italic", lineHeight: 1.6, maxWidth: 600, margin: "0 auto", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                      "{msgData.text}"
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           <style>{`
