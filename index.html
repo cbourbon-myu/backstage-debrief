@@ -839,7 +839,7 @@
                 {showUserMenu && (
                   <div style={{
                     position: "absolute", top: "calc(100% + 6px)",
-                    ...(isMobile ? { left: 0 } : { right: 0 }),
+                    right: 0,
                     minWidth: 180, maxWidth: isMobile ? "calc(100vw - 24px)" : "none",
                     background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
                     borderRadius: 10, padding: "6px 0", zIndex: 100,
@@ -957,7 +957,7 @@
                               🥊 1ère règle du GI Club 🥊
                             </div>
                             <div style={{
-                              fontSize: isMobile ? 14 : 18, fontWeight: 700, color: "#FAFAF9",
+                              fontSize: isMobile ? 12 : 15, fontWeight: 700, color: "#FAFAF9",
                               textTransform: "uppercase", lineHeight: 1.4, textAlign: "center",
                               textShadow: "0 2px 8px rgba(220,38,38,0.3)",
                             }}>
