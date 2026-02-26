@@ -548,7 +548,7 @@
 
         // Actions
         if (actions.length) {
-          lines.push("### 🎯 Actions décidées");
+          lines.push("### 🎯 Setlist du prochain set");
           lines.push("");
           lines.push("| Action | Responsable | Statut |");
           lines.push("|---|---|---|");
@@ -1029,7 +1029,9 @@
                       {cat.id === "ambiance" ? (
                         <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "contain", background: "none", cursor: "pointer" }} />
+                        <div onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", overflow: "hidden", flexShrink: 0, cursor: "pointer" }}>
+                          <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png?v=2" style={{ width: "110%", height: "110%", objectFit: "cover", marginTop: "-5%", marginLeft: "-5%" }} />
+                        </div>
                       ) : null}
                       {cat.label}
                     </div>
@@ -1263,7 +1265,7 @@
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                     <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: "#9A3412", display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontSize: isMobile ? 20 : 24 }}>🎯</span>
-                      Actions pour le prochain sprint
+                      Setlist du prochain set
                     </div>
                     <div style={{ border: "1.5px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316", flexShrink: 0, marginLeft: 8 }}>{actions.length}/3</div>
                   </div>
@@ -1405,7 +1407,7 @@
                         {/* --- Actions --- */}
                         {actions.length > 0 && (
                           <div>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Actions décidées</div>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Setlist du prochain set</div>
                             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                               {actions.map(a => (
                                 <div key={a.id} style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 12px", border: "1px solid rgba(249,115,22,0.2)" }}>
