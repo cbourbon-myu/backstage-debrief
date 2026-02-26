@@ -531,17 +531,17 @@
           lines.push("");
           if (pinnedRock.length) {
             lines.push("**🎸 A rocké**");
-            pinnedRock.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+            pinnedRock.forEach(f => lines.push(`- ${f.text}`));
             lines.push("");
           }
           if (pinnedFausse.length) {
             lines.push("**🔇 Fausses notes**");
-            pinnedFausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+            pinnedFausse.forEach(f => lines.push(`- ${f.text}`));
             lines.push("");
           }
           if (pinnedAmeliorer.length) {
             lines.push("**💫 À améliorer**");
-            pinnedAmeliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+            pinnedAmeliorer.forEach(f => lines.push(`- ${f.text}`));
             lines.push("");
           }
         }
@@ -1303,6 +1303,9 @@
                 </div>
 
               </div>
+              <div style={{ textAlign: "center", fontSize: isMobile ? 11 : 12.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "8px 0 0" }}>
+                "On repart avec 2-3 actions concrètes. L'idée : être un peu meilleurs pour le prochain set." 🤘
+              </div>
             </div>
 
             {/* ==================== RÉSUMÉ DU SPRINT ==================== */}
@@ -1379,7 +1382,6 @@
                                     {g.items.map(f => (
                                       <div key={f.id} style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>
                                         • {f.text}
-                                        {f.author && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginLeft: 4 }}>— {f.author}</span>}
                                       </div>
                                     ))}
                                   </div>
@@ -1411,11 +1413,6 @@
                 </div>
               );
             })()}
-
-            {/* FOOTER */}
-            <div style={{ textAlign: "center", fontSize: isMobile ? 12 : 13.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "6px 0 16px" }}>
-              "On repart avec 2-3 actions concrètes. L'idée : être un peu meilleurs pour le prochain set." 🤘
-            </div>
           </div>
 
           <style>{`
