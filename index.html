@@ -742,7 +742,9 @@
                 </button>
                 {showIntegration && (
                   <div style={{
-                    position: "absolute", top: "calc(100% + 6px)", right: 0, minWidth: 220,
+                    position: "absolute", top: "calc(100% + 6px)",
+                    ...(isMobile ? { left: 0 } : { right: 0 }),
+                    minWidth: 220, maxWidth: isMobile ? "calc(100vw - 24px)" : "none",
                     background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
                     borderRadius: 10, padding: "6px 0", zIndex: 100,
                     backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
@@ -1023,7 +1025,7 @@
                   const voters = getRatingsForCategory(cat.id);
                   return (
                     <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 10px" : "16px 14px", textAlign: "center" }}>
-                    <div style={{ fontSize: isMobile ? 13 : 14, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                       {cat.id === "ambiance" ? (
                         <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
@@ -1198,7 +1200,7 @@
                   const voters = getRatingsForCategory(cat.id);
                   return (
                     <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 12px" : "20px 20px", textAlign: "center" }}>
-                      <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
+                      <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
                         <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
                         <span>ROTI</span>
                       </div>
@@ -1452,7 +1454,8 @@
                   {/* Texte */}
 					<div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "left" }}>
 						<div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#F97316", marginBottom: 8, textAlign: "center"}}>🎤 Outro</div>
-						<div style={{ fontSize: isMobile ? 14 : 18, color: "#fff", fontStyle: "italic", lineHeight: 1.6, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}> <div style={{ fontSize: isMobile ? 20 : 28, marginBottom: 8 }}>{msgData.emoji}</div>
+						<div style={{ fontSize: isMobile ? 20 : 28, marginBottom: 8 }}>{msgData.emoji}</div>
+						<div style={{ fontSize: isMobile ? 14 : 18, color: "#fff", fontStyle: "italic", lineHeight: 1.6, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
    						"{msgData.text}"
   					</div>
 				  </div>
