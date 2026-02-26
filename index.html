@@ -732,18 +732,29 @@
                     </button>
                     )}
                     {confluenceUrl && (
-                      <a href={confluenceUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{
-                        display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "6px 14px",
-                        fontSize: 11, color: "#FDE047", fontWeight: 500, background: "none",
-                        cursor: "pointer", fontFamily: "inherit", textAlign: "left", textDecoration: "none",
-                      }}
-                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
-                        onMouseLeave={e => e.currentTarget.style.background = "none"}
-                      >
-                        <span style={{ fontSize: 16 }}>🔗</span>
-                        Voir la page Confluence →
-                      </a>
-                    )}
+  						<div style={{ display: "flex", alignItems: "center" }}>
+    						<a href={confluenceUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{
+    						  display: "flex", alignItems: "center", gap: 10, flex: 1, padding: "6px 14px",
+  						      fontSize: 11, color: "#FDE047", fontWeight: 500, background: "none",
+   						      cursor: "pointer", fontFamily: "inherit", textAlign: "left", textDecoration: "none",
+  						  }}
+   						      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+    					      onMouseLeave={e => e.currentTarget.style.background = "none"}
+  						  >
+  						    <span style={{ fontSize: 16 }}>🔗</span>
+   						    Voir la page Confluence →
+					    </a>
+ 					    {isAdmin && (
+ 					     <button onClick={(e) => { e.stopPropagation(); if (confirm("Supprimer le lien Confluence ? Tu pourras republier ensuite.")) { db.ref(`retro-${sprintDateKey}/confluenceUrl`).remove(); setConfluenceUrl(null); }}} style={{
+   					     background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.35)",
+    				     fontSize: 13, padding: "6px 10px", fontFamily: "inherit",
+   					    }}
+     					   onMouseEnter={e => e.target.style.color = "#EF4444"}
+     					   onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.35)"}
+    					  >🗑️</button>
+    					)}
+ 					 </div>
+					)}
                   </div>
                 )}
               </div>
