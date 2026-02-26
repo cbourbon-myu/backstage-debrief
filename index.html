@@ -657,7 +657,7 @@
                     backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
                   }}>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", fontWeight: 600, padding: "4px 14px 8px", textTransform: "uppercase", letterSpacing: 0.5 }}>
-                      En ligne - {connectedUsers.length} participant{connectedUsers.length > 1 ? "s" : ""}
+                      En ligne — {connectedUsers.length} participant{connectedUsers.length > 1 ? "s" : ""}
                     </div>
                     {connectedUsers.map(u => (
                       <div key={u.uid} style={{
@@ -770,7 +770,7 @@
                 {showUserMenu && (
                   <div style={{
                     position: "absolute", top: "calc(100% + 6px)",
-                    right: isMobile ? -8 : 0,
+                    ...(isMobile ? { left: 0 } : { right: 0 }),
                     minWidth: 180, maxWidth: isMobile ? "calc(100vw - 24px)" : "none",
                     background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
                     borderRadius: 10, padding: "6px 0", zIndex: 100,
@@ -824,7 +824,7 @@
             }}>
               {/* Image de fond */}
               <div style={{
-                position: "absolute", inset: 0,
+                position: "absolute", inset: 0, zIndex: 0,
                 backgroundImage: IMG_RULES,
                 backgroundSize: "cover", backgroundPosition: "center",
                 opacity: 0.5,
@@ -833,7 +833,7 @@
               }} />
               {/* Overlay dégradé */}
               <div style={{
-                position: "absolute", inset: 0,
+                position: "absolute", inset: 0, zIndex: 1,
                 background: isMobile
                   ? "linear-gradient(to bottom, #FFF6EE 0%, #FFF6EE 50%, rgba(255,246,238,0.7) 70%, rgba(255,246,238,0.3) 100%)"
                   : "linear-gradient(to right, #FFF6EE 0%, #FFF6EE 40%, rgba(255,246,238,0.7) 60%, rgba(255,246,238,0.2) 80%, transparent 100%)",
@@ -841,7 +841,7 @@
                 overflow: "hidden",
               }} />
 
-              <div style={{ flex: 1, padding: isMobile ? "16px 16px 20px" : "0px 28px", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+              <div style={{ flex: 1, padding: isMobile ? "16px 16px 20px" : "0px 28px", zIndex: 2, position: "relative", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                 <div style={{ fontSize: isMobile ? 20 : 24, fontWeight: 700, color: "#78350F", marginBottom: 6, display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
                   <span style={{ fontSize: isMobile ? 28 : 36 }}>🎼</span>
                   <span
@@ -857,7 +857,7 @@
                         bottom: isMobile ? "auto" : "calc(100% + 14px)",
                         top: isMobile ? "calc(100% + 10px)" : "auto",
                         left: "50%", transform: "translateX(-50%)",
-                        minWidth: isMobile ? 260 : 380, padding: 0, zIndex: 200, animation: "tooltipFadeIn 0.3s ease",
+                        minWidth: isMobile ? 260 : 380, padding: 0, zIndex: 9000, animation: "tooltipFadeIn 0.3s ease",
                         borderRadius: 12, overflow: "hidden",
                         boxShadow: "0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)",
                       }}>
