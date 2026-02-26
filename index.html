@@ -749,12 +749,14 @@
               </div>
 
               {/* Reset */}
-              <button onClick={resetAll} className="no-print" style={{
-                display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
-                borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7, fontFamily: "inherit",
-              }}>
-                <span style={{ fontSize: 18 }}>🔄</span>{!isMobile && " Reset"}
-              </button>
+				{isAdmin && (
+				  <button onClick={resetAll} className="no-print" style={{
+				  display: "flex", alignItems: "center", gap: 4, background: "rgba(255,255,255,0.08)", border: "1.2px solid rgba(255,255,255,0.3)",
+  				  borderRadius: 8, padding: "0 12px", height: 34, color: "#fff", fontSize: 12, fontWeight: 500, cursor: "pointer", opacity: 0.7, fontFamily: "inherit",
+				  }}>
+ 				   <span style={{ fontSize: 18 }}>🔄</span>{!isMobile && " Reset"}
+ 				 </button>
+				)}
 
               {/* Profil utilisateur */}
               <div data-dropdown style={{ position: "relative" }}>
