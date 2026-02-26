@@ -1105,7 +1105,7 @@
               </div>
             </div>
 
-            {/* ==================== ROTI ==================== */}
+            {/* ==================== ROTI + ACTIONS ==================== */}
             <div style={{ marginBottom: 24 }}>
               <div style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: "#1F2937", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1123,127 +1123,131 @@
                 </svg>
                 Le ressenti de la Rétro
               </div>
-              {(() => {
-                const cat = { id: "roti", label: "ROTI", color: "#C2410C", bg: "#FFEDD5", border: "#EA580C" };
-                const myRating = getMyRating(cat.id);
-                const myScore = myRating?.score;
-                const avg = getAvg(cat.id);
-                const voters = getRatingsForCategory(cat.id);
-                return (
-                  <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 12px" : "20px 20px", textAlign: "center", maxWidth: isMobile ? "100%" : 400 }}>
-                    <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
-                      <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
-                      <span>ROTI</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "center", gap: isMobile ? 6 : 10, marginBottom: 12, marginTop: 12 }}>
-                      {[1,2,3,4,5].map(score => (
-                        <button key={score} onClick={() => submitRating(cat.id, score)} className="vote-icon" style={{
-                          width: voteSize, height: voteSize, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
-                          background: myScore === score ? cat.bg : "#FFFAF5",
-                          fontSize: voteFontSize, cursor: "pointer", transition: "all 0.2s",
-                          transform: myScore === score ? "scale(1.15)" : "scale(1)",
-                          boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
-                        }} title={RATING_LABELS[score].label}>{RATING_LABELS[score].emoji}</button>
-                      ))}
-                    </div>
-                    {myScore && (
-                      <div style={{ fontSize: 11.5, color: cat.color, fontWeight: 600, marginBottom: 8 }}>
-                        Tu as voté : {RATING_LABELS[myScore].emoji} {RATING_LABELS[myScore].label}
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14, alignItems: "start" }}>
+
+                {/* --- ROTI --- */}
+                {(() => {
+                  const cat = { id: "roti", label: "ROTI", color: "#C2410C", bg: "#FFEDD5", border: "#EA580C" };
+                  const myRating = getMyRating(cat.id);
+                  const myScore = myRating?.score;
+                  const avg = getAvg(cat.id);
+                  const voters = getRatingsForCategory(cat.id);
+                  return (
+                    <div style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 12px" : "20px 20px", textAlign: "center" }}>
+                      <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 10 }}>
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ROTI.png")} style={{ width: 30, height: 30, objectFit: "contain", display: "block", cursor: "pointer" }} />
+                        <span>ROTI</span>
                       </div>
-                    )}
-                    {!showResults[cat.id] && (
-                      <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 4, borderTop: "1px solid " + cat.border + "33", paddingTop: 8 }}>
-                        {myScore ? (
-                          connectedUids.length > 0 ? (
-                            <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
-                          ) : null
-                        ) : (
-                          <>Choisis ton emoji pour voter 👆</>
-                        )}
+                      <div style={{ display: "flex", justifyContent: "center", gap: isMobile ? 6 : 10, marginBottom: 12, marginTop: 12 }}>
+                        {[1,2,3,4,5].map(score => (
+                          <button key={score} onClick={() => submitRating(cat.id, score)} className="vote-icon" style={{
+                            width: voteSize, height: voteSize, borderRadius: "50%", border: myScore === score ? "2.5px solid " + cat.color : "1.5px solid #E8C9A8",
+                            background: myScore === score ? cat.bg : "#FFFAF5",
+                            fontSize: voteFontSize, cursor: "pointer", transition: "all 0.2s",
+                            transform: myScore === score ? "scale(1.15)" : "scale(1)",
+                            boxShadow: myScore === score ? "0 2px 8px " + cat.border + "88" : "none",
+                          }} title={RATING_LABELS[score].label}>{RATING_LABELS[score].emoji}</button>
+                        ))}
                       </div>
-                    )}
-                    <div style={{ position: "relative", marginTop: 6 }}>
-                      {showResults[cat.id] && (
-                        <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
-                          <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
-                          <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
-                          <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 10 }}>/ 5 — {RATING_LABELS[Math.round(avg)]?.label}</div>
-                          <div style={{ background: "#F0DCC8", borderRadius: 99, height: 8, margin: "0 8px 12px", overflow: "hidden" }}>
-                            <div style={{ height: "100%", borderRadius: 99, background: cat.color, width: (avg / 5 * 100) + "%", transition: "width 1s ease" }} />
-                          </div>
-                          <div style={{ fontSize: 10.5, color: "#9CA3AF", marginBottom: 8 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
-                          <div style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "wrap" }}>
-                            {voters.map(v => (
-                              <span key={v.id} style={{ fontSize: 11, background: cat.bg, color: cat.color, borderRadius: 8, padding: "3px 8px", fontWeight: 600 }}>
-                                {RATING_LABELS[v.score]?.emoji} {v.author}
-                              </span>
-                            ))}
-                          </div>
+                      {myScore && (
+                        <div style={{ fontSize: 11.5, color: cat.color, fontWeight: 600, marginBottom: 8 }}>
+                          Tu as voté : {RATING_LABELS[myScore].emoji} {RATING_LABELS[myScore].label}
                         </div>
                       )}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-
-            {/* ==================== ACTIONS ==================== */}
-            <div style={{
-              background: "#FFFAF5", borderRadius: 14, border: "2px solid #F97316",
-              padding: isMobile ? "14px 12px" : "18px 20px", marginBottom: 24,
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: "#9A3412", display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: isMobile ? 20 : 24 }}>🎯</span>
-                  Actions pour le prochain sprint
-                </div>
-                <div style={{ border: "1.5px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316", flexShrink: 0, marginLeft: 8 }}>{actions.length}/3 max</div>
-              </div>
-              <div style={{ borderTop: "1px solid #F9731633", marginBottom: 12 }} />
-
-              {actions.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "12px 0", fontSize: 13.5, fontWeight: 600, color: "#9CA3AF" }}>Aucune action définie pour le moment</div>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 10 }}>
-                  {actions.map(action => (
-                    <div key={action.id} style={{ background: "#FFF7ED", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", gap: 10, border: "1px solid #F9731640", animation: "fadeIn 0.3s ease" }}>
-                      <input type="checkbox" checked={action.done || false} onChange={() => act.updateItem(action.id, { done: !action.done })}
-                        style={{ width: 17, height: 17, accentColor: "#F97316", cursor: "pointer", flexShrink: 0 }}
-                      />
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        {editingAction === action.id ? (
-                          <input autoFocus defaultValue={action.description}
-                            onBlur={e => { act.updateItem(action.id, { description: e.target.value }); setEditingAction(null); }}
-                            onKeyDown={e => e.key === "Enter" && (act.updateItem(action.id, { description: e.target.value }), setEditingAction(null))}
-                            style={{ width: "100%", border: "none", background: "transparent", fontSize: 13, fontFamily: "inherit", color: "#1F2937" }}
-                          />
-                        ) : (
-                          <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 13, color: "#1F2937", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
+                      {!showResults[cat.id] && (
+                        <div style={{ fontSize: 11, color: "#9CA3AF", marginTop: 4, borderTop: "1px solid " + cat.border + "33", paddingTop: 8 }}>
+                          {myScore ? (
+                            connectedUids.length > 0 ? (
+                              <>🔒 {getRatingsForCategory(cat.id).length}/{connectedUids.length} vote{connectedUids.length > 1 ? "s" : ""}</>
+                            ) : null
+                          ) : (
+                            <>Choisis ton emoji pour voter 👆</>
+                          )}
+                        </div>
+                      )}
+                      <div style={{ position: "relative", marginTop: 6 }}>
+                        {showResults[cat.id] && (
+                          <div style={{ borderTop: "1px solid " + cat.border + "44", paddingTop: 16, animation: "resultReveal 0.6s ease forwards" }}>
+                            <div style={{ fontSize: 48, marginBottom: 4 }}>{RATING_LABELS[Math.round(avg)]?.emoji}</div>
+                            <div style={{ fontSize: 38, fontWeight: 900, color: cat.color, lineHeight: 1 }}>{avg}</div>
+                            <div style={{ fontSize: 13, color: "#6B7280", marginBottom: 10 }}>/ 5 — {RATING_LABELS[Math.round(avg)]?.label}</div>
+                            <div style={{ background: "#F0DCC8", borderRadius: 99, height: 8, margin: "0 8px 12px", overflow: "hidden" }}>
+                              <div style={{ height: "100%", borderRadius: 99, background: cat.color, width: (avg / 5 * 100) + "%", transition: "width 1s ease" }} />
+                            </div>
+                            <div style={{ fontSize: 10.5, color: "#9CA3AF", marginBottom: 8 }}>{voters.length} vote{voters.length > 1 ? "s" : ""}</div>
+                            <div style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "wrap" }}>
+                              {voters.map(v => (
+                                <span key={v.id} style={{ fontSize: 11, background: cat.bg, color: cat.color, borderRadius: 8, padding: "3px 8px", fontWeight: 600 }}>
+                                  {RATING_LABELS[v.score]?.emoji} {v.author}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         )}
-                        {action.responsable && <div style={{ fontSize: 11, color: "#EA580C", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/reu.png" style={{ width: 14, height: 14, objectFit: "contain" }} /> {action.responsable}</div>}
                       </div>
-                      <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", display: action.authorUid === user?.uid ? "block" : "none", padding: "0 2px" }}
-                        onMouseEnter={e => e.currentTarget.querySelector("img").style.opacity = "1"} onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.35"}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 13, height: 13, objectFit: "contain", opacity: 0.35, transition: "opacity 0.2s" }} /></button>
                     </div>
-                  ))}
-                </div>
-              )}
+                  );
+                })()}
 
-              {actions.length < 3 && (
-                <div className="no-print">
-                  <div style={{ borderTop: "1px solid #F9731633", marginBottom: 12, marginTop: 6 }} />
-                  <div style={{ fontSize: 12.5, fontWeight: 600, color: "#9CA3AF", marginBottom: 7 }}>Ajouter une action</div>
-                  <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
-                    <input type="text" value={actionDesc} onChange={e => setActionDesc(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
-                      placeholder="Description de l'action..." style={{ flex: 2, minWidth: isMobile ? "100%" : 180, padding: "8px 12px", borderRadius: 8, border: "1px solid #E8C9A8", fontSize: 12.5, background: "#FFFAF5", color: "#1F2937" }}
-                      onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "#E8C9A8"} />
-                    <input type="text" value={actionResp} onChange={e => setActionResp(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
-                      placeholder="Responsable..." style={{ flex: 1, minWidth: isMobile ? "100%" : 130, padding: "8px 12px", borderRadius: 8, border: "1px solid #E8C9A8", fontSize: 12.5, background: "#FFFAF5", color: "#1F2937" }}
-                      onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "#E8C9A8"} />
+                {/* --- ACTIONS --- */}
+                <div style={{
+                  background: "#FFFAF5", borderRadius: 14, border: "2px solid #F97316",
+                  padding: isMobile ? "14px 12px" : "20px 20px",
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                    <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: "#9A3412", display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: isMobile ? 20 : 24 }}>🎯</span>
+                      Actions
+                    </div>
+                    <div style={{ border: "1.5px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316", flexShrink: 0, marginLeft: 8 }}>{actions.length}/3</div>
                   </div>
-                  <button onClick={addAction} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #F97316, #EA580C)", color: "#fff", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>+ Ajouter l'action</button>
+                  <div style={{ borderTop: "1px solid #F9731633", marginBottom: 12 }} />
+
+                  {actions.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "12px 0", fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>Aucune action définie</div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 10 }}>
+                      {actions.map(action => (
+                        <div key={action.id} style={{ background: "#FFF7ED", borderRadius: 10, padding: "9px 11px", display: "flex", alignItems: "center", gap: 9, border: "1px solid #F9731640", animation: "fadeIn 0.3s ease" }}>
+                          <input type="checkbox" checked={action.done || false} onChange={() => act.updateItem(action.id, { done: !action.done })}
+                            style={{ width: 16, height: 16, accentColor: "#F97316", cursor: "pointer", flexShrink: 0 }}
+                          />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            {editingAction === action.id ? (
+                              <input autoFocus defaultValue={action.description}
+                                onBlur={e => { act.updateItem(action.id, { description: e.target.value }); setEditingAction(null); }}
+                                onKeyDown={e => e.key === "Enter" && (act.updateItem(action.id, { description: e.target.value }), setEditingAction(null))}
+                                style={{ width: "100%", border: "none", background: "transparent", fontSize: 12.5, fontFamily: "inherit", color: "#1F2937" }}
+                              />
+                            ) : (
+                              <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 12.5, color: "#1F2937", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
+                            )}
+                            {action.responsable && <div style={{ fontSize: 10.5, color: "#EA580C", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/reu.png" style={{ width: 13, height: 13, objectFit: "contain" }} /> {action.responsable}</div>}
+                          </div>
+                          <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", display: action.authorUid === user?.uid ? "block" : "none", padding: "0 2px" }}
+                            onMouseEnter={e => e.currentTarget.querySelector("img").style.opacity = "1"} onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.35"}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 13, height: 13, objectFit: "contain", opacity: 0.35, transition: "opacity 0.2s" }} /></button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {actions.length < 3 && (
+                    <div className="no-print">
+                      <div style={{ borderTop: "1px solid #F9731633", marginBottom: 10, marginTop: 6 }} />
+                      <div style={{ display: "flex", gap: 6, marginBottom: 6, flexDirection: "column" }}>
+                        <input type="text" value={actionDesc} onChange={e => setActionDesc(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
+                          placeholder="Description de l'action..." style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #E8C9A8", fontSize: 12, background: "#FFFAF5", color: "#1F2937" }}
+                          onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "#E8C9A8"} />
+                        <input type="text" value={actionResp} onChange={e => setActionResp(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
+                          placeholder="Responsable..." style={{ width: "100%", padding: "8px 12px", borderRadius: 8, border: "1px solid #E8C9A8", fontSize: 12, background: "#FFFAF5", color: "#1F2937" }}
+                          onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "#E8C9A8"} />
+                      </div>
+                      <button onClick={addAction} style={{ width: "100%", padding: "9px 0", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #F97316, #EA580C)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>+ Ajouter</button>
+                    </div>
+                  )}
                 </div>
-              )}
+
+              </div>
             </div>
 
             {/* ==================== RÉSUMÉ DU SPRINT ==================== */}
