@@ -1101,8 +1101,7 @@
                       {items.map(fbk => {
                         const isOwner = fbk.authorUid === user?.uid;
                         return (
-                        <div key={fbk.id} style={{ background: cat.bg, borderRadius: 10, padding: "9px 11px", fontSize: 13, color: "#1F2937", display: "flex", alignItems: "flex-start", gap: 8, border: fbk.pinned ? "2px solid " + col.border : "1px solid " + col.border + "33", animation: "fadeIn 0.3s ease", position: "relative" }}>
-                          {fbk.pinned && <div style={{ position: "absolute", top: -1, right: 8, fontSize: 9, fontWeight: 700, color: col.border, background: cat.bg, padding: "0 4px", letterSpacing: 0.5 }}>📌 ÉPINGLÉ</div>}
+                        <div key={fbk.id} style={{ background: cat.bg, borderRadius: 10, padding: "9px 11px", fontSize: 13, color: "#1F2937", display: "flex", alignItems: "flex-start", gap: 8, border: fbk.pinned ? "2px solid " + col.border : "1px solid " + col.border + "33", animation: "fadeIn 0.3s ease" }}>
                           {editingFeedback === fbk.id ? (
                             <input autoFocus defaultValue={fbk.text}
                               onBlur={e => { fb.updateItem(fbk.id, { text: e.target.value.trim() || fbk.text }); setEditingFeedback(null); }}
@@ -1112,7 +1111,10 @@
                           ) : (
                             <div style={{ flex: 1 }}>
                               <div style={{ cursor: isOwner ? "pointer" : "default" }} onClick={() => isOwner && setEditingFeedback(fbk.id)}>{fbk.text}</div>
-                              {fbk.author && <div style={{ fontSize: 10.5, color: col.color, marginTop: 3, opacity: 0.7 }}>— {fbk.author}</div>}
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 3 }}>
+                                {fbk.author && <div style={{ fontSize: 10.5, color: col.color, opacity: 0.7 }}>— {fbk.author}</div>}
+                                {fbk.pinned && <div style={{ fontSize: 9, fontWeight: 700, color: col.border, letterSpacing: 0.5 }}>📌 ÉPINGLÉ</div>}
+                              </div>
                             </div>
                           )}
                           {isAdmin && (
@@ -1300,11 +1302,11 @@
                       <button onClick={addAction} style={{ width: "100%", padding: "9px 0", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #F97316, #EA580C)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>+ Ajouter</button>
                     </div>
                   )}
+                  <div style={{ textAlign: "center", fontSize: isMobile ? 10 : 11.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "10px 0 0" }}>
+                    "On repart avec 2-3 actions concrètes. L'idée : être un peu meilleurs pour le prochain set." 🤘
+                  </div>
                 </div>
 
-              </div>
-              <div style={{ textAlign: "center", fontSize: isMobile ? 11 : 12.5, color: "#F97316", fontStyle: "italic", opacity: 0.65, padding: "8px 0 0" }}>
-                "On repart avec 2-3 actions concrètes. L'idée : être un peu meilleurs pour le prochain set." 🤘
               </div>
             </div>
 
