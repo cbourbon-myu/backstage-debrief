@@ -1189,9 +1189,67 @@
 
             {/* ==================== ACTIONS ==================== */}
             <div style={{
+              background: "#FFFAF5", borderRadius: 14, border: "2px solid #F97316",
+              padding: isMobile ? "14px 12px" : "18px 20px", marginBottom: 24,
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: "#9A3412", display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: isMobile ? 20 : 24 }}>🎯</span>
+                  Actions pour le prochain sprint
+                </div>
+                <div style={{ border: "1.5px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316", flexShrink: 0, marginLeft: 8 }}>{actions.length}/3 max</div>
+              </div>
+              <div style={{ borderTop: "1px solid #F9731633", marginBottom: 12 }} />
+
+              {actions.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "12px 0", fontSize: 13.5, fontWeight: 600, color: "#9CA3AF" }}>Aucune action définie pour le moment</div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 10 }}>
+                  {actions.map(action => (
+                    <div key={action.id} style={{ background: "#FFF7ED", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", gap: 10, border: "1px solid #F9731640", animation: "fadeIn 0.3s ease" }}>
+                      <input type="checkbox" checked={action.done || false} onChange={() => act.updateItem(action.id, { done: !action.done })}
+                        style={{ width: 17, height: 17, accentColor: "#F97316", cursor: "pointer", flexShrink: 0 }}
+                      />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {editingAction === action.id ? (
+                          <input autoFocus defaultValue={action.description}
+                            onBlur={e => { act.updateItem(action.id, { description: e.target.value }); setEditingAction(null); }}
+                            onKeyDown={e => e.key === "Enter" && (act.updateItem(action.id, { description: e.target.value }), setEditingAction(null))}
+                            style={{ width: "100%", border: "none", background: "transparent", fontSize: 13, fontFamily: "inherit", color: "#1F2937" }}
+                          />
+                        ) : (
+                          <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 13, color: "#1F2937", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
+                        )}
+                        {action.responsable && <div style={{ fontSize: 11, color: "#EA580C", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/reu.png" style={{ width: 14, height: 14, objectFit: "contain" }} /> {action.responsable}</div>}
+                      </div>
+                      <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", display: action.authorUid === user?.uid ? "block" : "none", padding: "0 2px" }}
+                        onMouseEnter={e => e.currentTarget.querySelector("img").style.opacity = "1"} onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.35"}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 13, height: 13, objectFit: "contain", opacity: 0.35, transition: "opacity 0.2s" }} /></button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {actions.length < 3 && (
+                <div className="no-print">
+                  <div style={{ borderTop: "1px solid #F9731633", marginBottom: 12, marginTop: 6 }} />
+                  <div style={{ fontSize: 12.5, fontWeight: 600, color: "#9CA3AF", marginBottom: 7 }}>Ajouter une action</div>
+                  <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+                    <input type="text" value={actionDesc} onChange={e => setActionDesc(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
+                      placeholder="Description de l'action..." style={{ flex: 2, minWidth: isMobile ? "100%" : 180, padding: "8px 12px", borderRadius: 8, border: "1px solid #E8C9A8", fontSize: 12.5, background: "#FFFAF5", color: "#1F2937" }}
+                      onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "#E8C9A8"} />
+                    <input type="text" value={actionResp} onChange={e => setActionResp(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
+                      placeholder="Responsable..." style={{ flex: 1, minWidth: isMobile ? "100%" : 130, padding: "8px 12px", borderRadius: 8, border: "1px solid #E8C9A8", fontSize: 12.5, background: "#FFFAF5", color: "#1F2937" }}
+                      onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "#E8C9A8"} />
+                  </div>
+                  <button onClick={addAction} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #F97316, #EA580C)", color: "#fff", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>+ Ajouter l'action</button>
+                </div>
+              )}
+            </div>
+
+            {/* ==================== RÉSUMÉ DU SPRINT ==================== */}
+            <div style={{
               borderRadius: 16, padding: 0, marginBottom: 24, position: "relative", overflow: "hidden",
-              display: "flex", flexDirection: isMobile ? "column" : "row",
-              alignItems: "stretch", minHeight: isMobile ? "auto" : 240,
+              minHeight: isMobile ? 120 : 180,
             }}>
               {/* Image de fond */}
               <div style={{
@@ -1203,65 +1261,13 @@
               {/* Overlay dégradé */}
               <div style={{
                 position: "absolute", inset: 0,
-                background: isMobile
-                  ? "linear-gradient(to bottom, rgba(28,10,10,0.7) 0%, rgba(50,14,14,1) 40%)"
-                  : "linear-gradient(to right, rgba(28,10,10,0.2) 0%, rgba(28,10,10,0.75) 25%, rgba(38,12,12,0.95) 40%, rgba(50,14,14,1) 55%, rgba(50,14,14,1) 100%)",
+                background: "linear-gradient(135deg, rgba(28,10,10,0.85) 0%, rgba(50,14,14,0.9) 50%, rgba(28,10,10,0.85) 100%)",
               }} />
-
-              {/* Spacer desktop only */}
-              {!isMobile && <div style={{ width: 300, flexShrink: 0 }} />}
-
-              <div style={{ flex: 1, padding: isMobile ? "16px 14px" : "20px 24px", position: "relative", zIndex: 1 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <div style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: "#F97316" }}>🎯 Actions pour le prochain sprint</div>
-                  <div style={{ border: "1.2px solid #F97316", borderRadius: 13, padding: "2px 12px", fontSize: 11, fontWeight: 600, color: "#F97316", flexShrink: 0, marginLeft: 8 }}>{actions.length}/3 max</div>
+              <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "24px 16px" : "32px 28px", textAlign: "center" }}>
+                <div style={{ fontSize: isMobile ? 16 : 20, fontWeight: 700, color: "#F97316", marginBottom: 8 }}>🎤 Résumé du sprint</div>
+                <div style={{ fontSize: isMobile ? 12 : 13.5, color: "rgba(255,255,255,0.5)", fontStyle: "italic" }}>
+                  Bientôt disponible — Le récap de fin de concert arrive !
                 </div>
-                <div style={{ borderTop: "1px solid rgba(249,115,22,0.3)", marginBottom: 14 }} />
-
-                {actions.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "12px 0", fontSize: 13.5, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>Aucune action définie pour le moment</div>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 10 }}>
-                    {actions.map(action => (
-                      <div key={action.id} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 10, padding: "10px 12px", display: "flex", alignItems: "center", gap: 10, border: "1px solid rgba(249,115,22,0.25)", animation: "fadeIn 0.3s ease" }}>
-                        <input type="checkbox" checked={action.done || false} onChange={() => act.updateItem(action.id, { done: !action.done })}
-                          style={{ width: 17, height: 17, accentColor: "#F97316", cursor: "pointer", flexShrink: 0 }}
-                        />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          {editingAction === action.id ? (
-                            <input autoFocus defaultValue={action.description}
-                              onBlur={e => { act.updateItem(action.id, { description: e.target.value }); setEditingAction(null); }}
-                              onKeyDown={e => e.key === "Enter" && (act.updateItem(action.id, { description: e.target.value }), setEditingAction(null))}
-                              style={{ width: "100%", border: "none", background: "transparent", fontSize: 13, fontFamily: "inherit", color: "#fff" }}
-                            />
-                          ) : (
-                            <div onClick={() => action.authorUid === user?.uid && setEditingAction(action.id)} style={{ fontSize: 13, color: "rgba(255,255,255,0.9)", cursor: action.authorUid === user?.uid ? "pointer" : "default", textDecoration: action.done ? "line-through" : "none", opacity: action.done ? 0.5 : 1 }}>{action.description}</div>
-                          )}
-                          {action.responsable && <div style={{ fontSize: 11, color: "#F97316", marginTop: 1, fontWeight: 500, display: "flex", alignItems: "center", gap: 4 }}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/reu.png" style={{ width: 14, height: 14, objectFit: "contain" }} /> {action.responsable}</div>}
-                        </div>
-                        <button onClick={() => act.removeItem(action.id)} style={{ background: "none", border: "none", cursor: "pointer", display: action.authorUid === user?.uid ? "block" : "none", padding: "0 2px" }}
-                          onMouseEnter={e => e.currentTarget.querySelector("img").style.opacity = "1"} onMouseLeave={e => e.currentTarget.querySelector("img").style.opacity = "0.35"}><img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/trash.svg" style={{ width: 13, height: 13, objectFit: "contain", opacity: 0.35, transition: "opacity 0.2s" }} /></button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div style={{ borderTop: "1px solid rgba(249,115,22,0.3)", marginBottom: 12, marginTop: 6 }} />
-
-                {actions.length < 3 && (
-                  <div className="no-print">
-                    <div style={{ fontSize: 12.5, fontWeight: 600, color: "rgba(255,255,255,0.55)", marginBottom: 7 }}>Ajouter une action</div>
-                    <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
-                      <input type="text" value={actionDesc} onChange={e => setActionDesc(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
-                        placeholder="Description de l'action..." style={{ flex: 2, minWidth: isMobile ? "100%" : 180, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontSize: 12.5, background: "rgba(255,255,255,0.08)", color: "#fff" }}
-                        onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.2)"} />
-                      <input type="text" value={actionResp} onChange={e => setActionResp(e.target.value)} onKeyDown={e => e.key === "Enter" && addAction()}
-                        placeholder="Responsable..." style={{ flex: 1, minWidth: isMobile ? "100%" : 130, padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", fontSize: 12.5, background: "rgba(255,255,255,0.08)", color: "#fff" }}
-                        onFocus={e => e.target.style.borderColor = "#F97316"} onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.2)"} />
-                    </div>
-                    <button onClick={addAction} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #F97316, #EA580C)", color: "#fff", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>+ Ajouter l'action</button>
-                  </div>
-                )}
               </div>
             </div>
 
