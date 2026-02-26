@@ -503,37 +503,87 @@
         lines.push(`# 🥁 Rétro Sprint — ${dateLabel}`);
         lines.push(`> Exporté le ${new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}`);
         lines.push("");
-        lines.push("## 🎙️ Ressenti du Sprint");
+
+        // ===== RÉSUMÉ =====
+        lines.push("---");
         lines.push("");
-        lines.push("| Thème | Moyenne | Votes |");
-        lines.push("|---|---|---|");
-        lines.push(`| 🥳 Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
-        lines.push(`| 📊 Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push("## 🎤 Résumé du sprint");
         lines.push("");
-        lines.push("## 🎸 Ce qui a rocké");
+
+        // Ressenti global
+        lines.push("### Ressenti global");
         lines.push("");
-        if (rock.length) rock.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
-        else lines.push("*Aucun retour*");
+        lines.push("| Thème | Moyenne |");
+        lines.push("|---|---|");
+        lines.push(`| 🥳 Ambiance | **${avg(ambianceVotes)} / 5** |`);
+        lines.push(`| 📊 Satisfaction | **${avg(satisfactionVotes)} / 5** |`);
+        lines.push(`| 🍖 ROTI | **${avg(rotiVotes)} / 5** |`);
         lines.push("");
-        lines.push("## 🔇 Les fausses notes");
-        lines.push("");
-        if (fausse.length) fausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
-        else lines.push("*Aucun retour*");
-        lines.push("");
-        lines.push("## 💫 À améliorer");
-        lines.push("");
-        if (ameliorer.length) ameliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
-        else lines.push("*Aucun retour*");
-        lines.push("");
+
+        // Retours épinglés
+        const pinnedRock = rock.filter(f => f.pinned);
+        const pinnedFausse = fausse.filter(f => f.pinned);
+        const pinnedAmeliorer = ameliorer.filter(f => f.pinned);
+        const hasPinned = pinnedRock.length || pinnedFausse.length || pinnedAmeliorer.length;
+
+        if (hasPinned) {
+          lines.push("### 📌 Retours clés");
+          lines.push("");
+          if (pinnedRock.length) {
+            lines.push("**🎸 A rocké**");
+            pinnedRock.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+            lines.push("");
+          }
+          if (pinnedFausse.length) {
+            lines.push("**🔇 Fausses notes**");
+            pinnedFausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+            lines.push("");
+          }
+          if (pinnedAmeliorer.length) {
+            lines.push("**💫 À améliorer**");
+            pinnedAmeliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+            lines.push("");
+          }
+        }
+
+        // Actions
         if (actions.length) {
-          lines.push("## 🎯 Actions décidées");
+          lines.push("### 🎯 Actions décidées");
           lines.push("");
           lines.push("| Action | Responsable | Statut |");
           lines.push("|---|---|---|");
           actions.forEach(a => lines.push(`| ${a.description} | ${a.responsable || "—"} | ${a.done ? "✅ Fait" : "⏳ À faire"} |`));
           lines.push("");
         }
-        lines.push("## 🍖 ROTI");
+
+        // ===== DÉTAIL =====
+        lines.push("---");
+        lines.push("");
+        lines.push("## 📋 Détail de la rétro");
+        lines.push("");
+        lines.push("### 🎙️ Ressenti du Sprint");
+        lines.push("");
+        lines.push("| Thème | Moyenne | Votes |");
+        lines.push("|---|---|---|");
+        lines.push(`| 🥳 Ambiance du Sprint | **${avg(ambianceVotes)} / 5** | ${ambianceVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push(`| 📊 Satisfaction Travail | **${avg(satisfactionVotes)} / 5** | ${satisfactionVotes.map(v => `${v.author} ${LABELS[v.score]?.split(" ")[0]}`).join(", ") || "—"} |`);
+        lines.push("");
+        lines.push("### 🎸 Ce qui a rocké");
+        lines.push("");
+        if (rock.length) rock.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+        else lines.push("*Aucun retour*");
+        lines.push("");
+        lines.push("### 🔇 Les fausses notes");
+        lines.push("");
+        if (fausse.length) fausse.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+        else lines.push("*Aucun retour*");
+        lines.push("");
+        lines.push("### 💫 À améliorer");
+        lines.push("");
+        if (ameliorer.length) ameliorer.forEach(f => lines.push(`- ${f.text}${f.author ? ` *(${f.author})*` : ""}`));
+        else lines.push("*Aucun retour*");
+        lines.push("");
+        lines.push("### 🍖 ROTI");
         lines.push("");
         lines.push(`**Moyenne : ${avg(rotiVotes)} / 5**`);
         if (rotiVotes.length) {
