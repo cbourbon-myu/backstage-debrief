@@ -561,7 +561,7 @@
           const md = generateMarkdown();
           const response = await fetch(CONFLUENCE_FUNCTION_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer bkstg-d3br13f-myu-2026-x9k7m2p4" },
             body: JSON.stringify({ markdown: md, sprintDate: sprintDateKey, userEmail: user.email }),
           });
           const result = await response.json();
