@@ -1027,9 +1027,9 @@
                     <div key={cat.id} style={{ background: "#FFFAF5", borderRadius: 14, border: "2px solid " + cat.border, padding: isMobile ? "14px 10px" : "16px 14px", textAlign: "center" }}>
                     <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: cat.color, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                       {cat.id === "ambiance" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, objectFit: "contain", background: "none", cursor: "pointer" }} />
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/ambiance.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
                       ) : cat.id === "satisfaction" ? (
-                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", background: "none", cursor: "pointer" }} />
+                        <img src="https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png" onClick={() => setZoomedImage("https://raw.githubusercontent.com/cbourbon-myu/backstage-debrief/main/assets/satisfaction.png")} style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "contain", background: "none", cursor: "pointer" }} />
                       ) : null}
                       {cat.label}
                     </div>
