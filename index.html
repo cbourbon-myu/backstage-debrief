@@ -671,9 +671,9 @@
 
             {/* Logo + Title */}
             <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ fontSize: isMobile ? 20 : 34, fontWeight: 800, color: "#F97316", letterSpacing: isMobile ? 1 : 2.5, display: "flex", alignItems: "center" }}>
+              <div style={{ fontSize: isMobile ? 17 : 34, fontWeight: 800, color: "#F97316", letterSpacing: isMobile ? 1 : 2.5, display: "flex", alignItems: "center" }}>
                 <img src="assets/Batterie.png" onClick={() => setZoomedImage("assets/Batterie.png")} style={{ width: isMobile ? 44 : 72, height: isMobile ? 44 : 72, borderRadius: "50%", objectFit: "cover", marginRight: isMobile ? 8 : 12, cursor: "pointer" }} />
-                {isMobile ? "BACKSTAGE" : "BACKSTAGE DEBRIEF"}
+                BACKSTAGE DEBRIEF
               </div>
             </div>
 
@@ -701,7 +701,9 @@
                 </button>
                 {showPresence && (
                   <div style={{
-                    position: "absolute", top: "calc(100% + 6px)", right: 0, minWidth: 200,
+                    position: "absolute", top: "calc(100% + 6px)",
+                    ...(isMobile ? { left: 0 } : { right: 0 }),
+                    minWidth: 200, maxWidth: isMobile ? "calc(100vw - 24px)" : "none",
                     background: "rgba(28,10,10,0.95)", border: "1px solid rgba(255,255,255,0.2)",
                     borderRadius: 10, padding: "8px 0", zIndex: 100,
                     backdropFilter: "blur(12px)", boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
@@ -863,7 +865,7 @@
               position: "relative", zIndex: 0, marginTop: -4, gap: isMobile ? 2 : 0,
             }}>
               <div style={{ fontSize: isMobile ? 11 : 13, color: "#fff", opacity: 0.92 }}>
-                {isMobile ? "Mardi 14h30-15h30 🤫" : "Tous les 15 jours • Mardi 14h30-15h30 • Ce qui se dit en backstage reste en backstage 🤫"}
+                Tous les 15 jours • Mardi 14h30-15h30 • Ce qui se dit en backstage reste en backstage 🤫
               </div>
               <div style={{ fontSize: isMobile ? 9.5 : 10.5, color: "rgba(255,255,255,0.55)" }}>
                 <em>Mode collaboratif temps réel</em> — Sprint du {sprintDateLabel}
@@ -1124,7 +1126,7 @@
                           {(fbk.author || fbk.pinned) && (
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
                               {fbk.author ? <div style={{ fontSize: 10.5, color: col.color, opacity: 0.7 }}>— {fbk.author}</div> : <div />}
-                              {fbk.pinned && <div style={{ fontSize: 7, fontStyle: "italic", fontWeight: 700, color: col.border, letterSpacing: 0.5 }}>Épinglé</div>}
+                              {fbk.pinned && <div style={{ fontSize: 7, fontStyle: "italic", fontWeight: 700, color: col.border, letterSpacing: 0.5 }}>📌 Épinglé</div>}
                             </div>
                           )}
                         </div>
