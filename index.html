@@ -1450,12 +1450,12 @@
                     background: "linear-gradient(135deg, rgba(28,10,10,0.75) 0%, rgba(50,14,14,0.8) 50%, rgba(28,10,10,0.75) 100%)",
                   }} />
                   {/* Texte */}
-                  <div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "right" }}>
-                    <div style={{ fontSize: isMobile ? 20 : 24, marginBottom: 8 }}>{msgData.emoji}</div>
-                    <div style={{ fontSize: isMobile ? 14 : 20, color: "#fff", fontStyle: "italic", lineHeight: 1.6, maxWidth: 600, margin: "0 auto", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-                      "{msgData.text}"
-                    </div>
-                  </div>
+					<div style={{ position: "relative", zIndex: 1, padding: isMobile ? "20px 16px" : "28px 32px", textAlign: "left" }}>
+						<div style={{ fontSize: isMobile ? 14 : 18, fontWeight: 700, color: "#F97316", marginBottom: 8 }}>👏 Le mot de la fin</div>
+  						<div style={{ fontSize: isMobile ? 12 : 14, color: "#fff", fontStyle: "italic", lineHeight: 1.6, maxWidth: 600, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+   						"{msgData.text}"
+  					</div>
+				  </div>
                 </div>
               );
             })()}
