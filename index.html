@@ -655,7 +655,7 @@
         } catch (error) {
           console.error("Confluence export error:", error);
           setConfluenceStatus("error");
-          alert(error.message.includes("existe déjà") ? "Une page existe déjà pour ce sprint !" : "Erreur : " + error.message);
+          alert(error.message.includes("existe déjà") ? "Une page existe déjà pour ce sprint dans confluence !" : "Erreur : " + error.message);
           setTimeout(() => { setConfluenceStatus(null); }, 4000);
         }
       };
